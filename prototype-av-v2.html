@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Assets — MMM (HC-9489 A&V v2)</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-base:#010514;
+  --bg-surface:#05112a;
+  --bg-surface-2:#091a38;
+  --bg-elevated:#0d2347;
+  --bg-hover:#112d5a;
+  --bg-selected:#0e2550;
+  --border:#1b3a6b;
+  --border-light:#243d6b;
+  --text-primary:#e8edf5;
+  --text-secondary:#8a9bbf;
+  --text-muted:#526180;
+  --accent-teal:#00d4d4;
+  --accent-teal-dim:#00a0a0;
+  --accent-orange:#ff8c00;
+  --accent-purple:#9b59d0;
+  --accent-green:#3dd68c;
+  --accent-red:#f04e4e;
+  --accent-yellow:#f5c842;
+  --font:'Siemens Sans','Inter',system-ui,sans-serif;
+  --radius:4px;--radius-lg:8px;--radius-xl:12px;
+  --panel-min-width:480px;
+}
+html,body,#root{height:100%;background:var(--bg-base);color:var(--text-primary);font-family:var(--font);font-size:13px}
+button{cursor:pointer;font-family:inherit;font-size:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.app{display:flex;flex-direction:column;height:100%}
+
+/* TOP NAV */
+.top-nav{height:46px;background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:100}
+.top-nav .logo{width:26px;height:26px;background:var(--accent-teal);border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--bg-base);flex-shrink:0}
+.top-nav .brand{font-weight:600;font-size:14px}
+.top-nav .sep{color:var(--text-muted);font-size:12px}
+.top-nav .tenant{color:var(--text-secondary);font-size:12px}
+.top-nav .spacer{flex:1}
+.top-nav .nav-link{padding:4px 10px;font-size:12px;color:var(--text-secondary);cursor:pointer;border-radius:var(--radius)}
+.top-nav .nav-link:hover,.top-nav .nav-link.active{background:var(--bg-elevated);color:var(--text-primary)}
+.top-nav .nav-link.active{color:var(--accent-teal)}
+.top-nav .avatar{width:26px;height:26px;background:var(--accent-purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff}
+
+/* BODY */
+.main-body{display:flex;flex:1;overflow:hidden}
+.left-nav{width:46px;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;overflow:visible;position:relative}
+.nav-icon{width:34px;height:34px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:all .12s;position:relative;font-size:15px}
+.nav-icon:hover,.nav-icon.active{background:var(--bg-elevated);color:var(--accent-teal)}
+.nav-icon.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--accent-teal);border-radius:0 2px 2px 0}
+.nav-spacer{flex:1}
+.submenu{position:absolute;left:46px;top:auto;bottom:0;background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);width:190px;z-index:300;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.submenu-item{padding:9px 14px;cursor:pointer;color:var(--text-secondary);font-size:12px;display:flex;align-items:center;gap:8px}
+.submenu-item:hover,.submenu-item.active{background:var(--bg-elevated);color:var(--text-primary)}
+.submenu-item.active{color:var(--accent-teal)}
+
+/* CONTENT */
+.content{flex:1;overflow:auto;display:flex;flex-direction:column}
+
+/* BUTTONS */
+.btn{padding:5px 12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:all .12s;white-space:nowrap}
+.btn:hover{background:var(--bg-hover);border-color:var(--border-light)}
+.btn.primary{background:var(--accent-teal);border-color:var(--accent-teal);color:var(--bg-base);font-weight:600}
+.btn.primary:hover{background:var(--accent-teal-dim);border-color:var(--accent-teal-dim)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--text-secondary)}
+.btn.ghost:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn.danger{border-color:var(--accent-red);color:var(--accent-red)}
+.btn.danger:hover{background:rgba(240,78,78,.1)}
+.search-box{padding:5px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);outline:none;transition:border-color .12s}
+.search-box:focus{border-color:var(--accent-teal)}
+.search-box::placeholder{color:var(--text-muted)}
+
+/* TYPE FILTER BAR — fix 5 */
+.type-filter-bar{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--bg-surface);flex-shrink:0}
+.type-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg-surface-2);color:var(--text-secondary);font-size:12px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:6px}
+.type-btn:hover{border-color:var(--border-light);color:var(--text-primary);background:var(--bg-elevated)}
+.type-btn.active{border-color:var(--accent-teal);background:rgba(0,212,212,.1);color:var(--accent-teal);font-weight:600}
+.type-btn .count-badge{font-size:10px;background:var(--bg-elevated);color:var(--text-muted);padding:1px 5px;border-radius:8px;font-weight:400}
+.type-btn.active .count-badge{background:rgba(0,212,212,.2);color:var(--accent-teal)}
+.subtype-bar{padding:5px 16px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;background:var(--bg-surface);flex-shrink:0}
+.subtype-chip{padding:3px 10px;border-radius:10px;border:1px solid var(--border);font-size:11px;color:var(--text-muted);cursor:pointer;transition:all .12s}
+.subtype-chip:hover{color:var(--text-primary);border-color:var(--border-light)}
+.subtype-chip.active{border-color:var(--accent-teal);color:var(--accent-teal);background:rgba(0,212,212,.08)}
+
+/* TABLE */
+.table-toolbar{height:44px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0;background:var(--bg-surface)}
+.table-toolbar .title{font-weight:600;font-size:14px}
+.table-wrap{flex:1;overflow:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:7px 12px;text-align:left;font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--bg-surface);position:sticky;top:0;white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(27,58,107,.5);cursor:pointer;transition:background .08s}
+tbody tr:hover{background:var(--bg-hover)}
+tbody tr.selected{background:var(--bg-selected)}
+tbody td{padding:7px 12px;font-size:12px;color:var(--text-secondary);vertical-align:middle}
+
+/* CONDITION BAR in table — fix 1 */
+.cond-cell{display:flex;align-items:center;gap:8px;min-width:110px}
+.cond-score{font-size:13px;font-weight:700;width:28px;flex-shrink:0;text-align:right}
+.cond-bar-track{flex:1;height:5px;background:var(--bg-elevated);border-radius:3px;overflow:hidden}
+.cond-bar-fill{height:100%;border-radius:3px}
+.cond-label{font-size:10px;color:var(--text-muted);flex-shrink:0}
+
+/* PILLS */
+.pill{padding:2px 7px;border-radius:8px;font-size:11px;font-weight:500;display:inline-block;white-space:nowrap}
+.pill.road{background:rgba(0,212,212,.12);color:var(--accent-teal)}
+.pill.bridge{background:rgba(155,89,208,.12);color:var(--accent-purple)}
+.pill.building{background:rgba(255,140,0,.12);color:var(--accent-orange)}
+.pill.pipe{background:rgba(61,214,140,.12);color:var(--accent-green)}
+.pill.active{background:rgba(61,214,140,.12);color:var(--accent-green)}
+.pill.inactive{background:rgba(82,97,128,.12);color:var(--text-muted)}
+.pill.maintenance{background:rgba(255,140,0,.12);color:var(--accent-orange)}
+
+/* SIDE PANEL */
+.side-panel{flex:0 0 50%;min-width:var(--panel-min-width);background:var(--bg-surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+
+/* PANEL HERO — fix 1: condition score prominent at top */
+.panel-hero{padding:16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:12px}
+.panel-hero-top{display:flex;align-items:flex-start;gap:12px}
+.asset-type-icon{width:44px;height:44px;background:var(--bg-elevated);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.panel-asset-info{flex:1}
+.panel-asset-name{font-weight:700;font-size:16px;color:var(--text-primary);line-height:1.2}
+.panel-asset-meta{font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:8px}
+.panel-hero-close{background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;padding:2px;line-height:1;flex-shrink:0}
+.panel-hero-close:hover{color:var(--text-primary)}
+
+/* CONDITION HERO STRIP — fix 1 */
+.condition-hero-strip{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
+.chs-score{text-align:center}
+.chs-score .big{font-size:32px;font-weight:800;line-height:1}
+.chs-score .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.chs-bars{display:flex;flex-direction:column;gap:5px;flex:1}
+.chs-bar-row{display:flex;align-items:center;gap:8px}
+.chs-bar-name{font-size:11px;color:var(--text-secondary);width:150px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chs-bar-track{flex:1;height:4px;background:var(--bg-elevated);border-radius:2px;overflow:hidden}
+.chs-bar-fill{height:100%;border-radius:2px}
+.chs-bar-val{font-size:11px;font-weight:600;width:24px;text-align:right;flex-shrink:0}
+.chs-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--bg-surface);flex-shrink:0}
+.tab{padding:9px 14px;font-size:12px;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tab:hover{color:var(--text-primary)}
+.tab.active{color:var(--accent-teal);border-bottom-color:var(--accent-teal)}
+.tab .new-badge{font-size:9px;background:rgba(0,212,212,.2);color:var(--accent-teal);border-radius:6px;padding:1px 5px;font-weight:600}
+.panel-body{flex:1;overflow:auto;padding:16px}
+
+/* VALUATION STRIP — fix 3 */
+.val-strip{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px}
+.val-cell{background:var(--bg-surface-2);padding:12px 14px}
+.val-cell .vc-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.val-cell .vc-value{font-size:16px;font-weight:700;color:var(--text-primary)}
+.val-cell .vc-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+.val-cell .vc-link{font-size:10px;color:var(--accent-teal);cursor:pointer;margin-top:3px;display:flex;align-items:center;gap:3px}
+.aasb-banner{background:rgba(0,212,212,.06);border:1px solid rgba(0,212,212,.2);border-radius:var(--radius);padding:8px 12px;font-size:11px;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:flex-start;gap:8px}
+.aasb-banner .icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* SECTION */
+.section{margin-bottom:18px}
+.section-title{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.section-title .hc-tag{background:rgba(0,212,212,.12);color:var(--accent-teal);padding:1px 6px;border-radius:6px;font-size:9px;text-transform:none;letter-spacing:0;font-weight:600}
+
+/* ATTR PROFILE — fix 2: combined tab */
+.attr-group{margin-bottom:16px}
+.attr-group-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.attr-row{display:flex;align-items:center;padding:5px 0;gap:8px}
+.attr-row:not(:last-child){border-bottom:1px solid rgba(27,58,107,.4)}
+.attr-key{font-size:12px;color:var(--text-muted);flex-shrink:0;width:150px}
+.attr-val{font-size:12px;color:var(--text-primary);flex:1}
+.attr-val.enum{color:var(--accent-teal);background:rgba(0,212,212,.08);padding:1px 7px;border-radius:4px;display:inline-block}
+
+/* CONDITION DETAIL in profile tab */
+.cvar-card{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:11px 13px;margin-bottom:8px}
+.cvar-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cvar-card-name{font-size:12px;font-weight:600;color:var(--text-primary)}
+.cvar-score-pill{font-size:15px;font-weight:800}
+.cvar-bar-track{height:5px;background:var(--bg-elevated);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.cvar-bar-fill{height:100%;border-radius:3px}
+.cvar-meta-row{display:flex;gap:14px;font-size:10px;color:var(--text-muted)}
+.weight-pill{background:var(--bg-elevated);color:var(--text-secondary);padding:1px 6px;border-radius:4px;font-size:10px}
+
+/* SPEC ROWS */
+.spec-row{display:flex;padding:5px 0;gap:8px;border-bottom:1px solid rgba(27,58,107,.4)}
+.spec-row:last-child{border-bottom:none}
+.spec-key{width:150px;flex-shrink:0;color:var(--text-muted);font-size:12px}
+.spec-val{color:var(--text-primary);font-size:12px;flex:1}
+
+/* ACTIVITY */
+.activity-item{padding:8px 0;border-bottom:1px solid rgba(27,58,107,.4);display:flex;gap:10px;align-items:flex-start}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-teal);flex-shrink:0;margin-top:3px}
+.activity-text{font-size:12px;color:var(--text-secondary);flex:1}
+.activity-time{font-size:10px;color:var(--text-muted);white-space:nowrap}
+
+/* WEIGHT EDITOR — fix 4 */
+.weight-editor{margin-top:8px}
+.we-bar{height:28px;border-radius:var(--radius-lg);overflow:hidden;display:flex;margin-bottom:12px;gap:1px}
+.we-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);transition:flex .2s;cursor:pointer;position:relative;min-width:20px}
+.we-seg:hover::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1)}
+.we-rows{display:flex;flex-direction:column;gap:6px}
+.we-row{display:flex;align-items:center;gap:10px}
+.we-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.we-name{font-size:12px;color:var(--text-secondary);flex:1}
+.we-input{width:52px;padding:3px 6px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);text-align:center;font-size:12px;outline:none}
+.we-input:focus{border-color:var(--accent-teal)}
+.we-pct{font-size:11px;color:var(--text-muted)}
+.we-total{font-size:12px;font-weight:600;margin-top:6px;text-align:right}
+.we-total.ok{color:var(--accent-green)}
+.we-total.bad{color:var(--accent-red)}
+
+/* SETTINGS */
+.settings-layout{display:flex;flex:1;overflow:hidden}
+.settings-sidebar{width:196px;background:var(--bg-surface);border-right:1px solid var(--border);padding:12px 0;flex-shrink:0}
+.settings-nav-item{padding:8px 16px;font-size:12px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .1s}
+.settings-nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.settings-nav-item.active{background:var(--bg-selected);color:var(--accent-teal)}
+.settings-content{flex:1;overflow:auto;padding:24px}
+.settings-title{font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:3px}
+.settings-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px}
+
+/* TEMPLATE CARDS */
+.template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.tc{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;cursor:pointer;transition:all .12s}
+.tc:hover,.tc.sel{border-color:var(--accent-teal);background:var(--bg-elevated)}
+.tc-icon{font-size:22px;margin-bottom:8px}
+.tc-name{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.tc-sub{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+.tc-counts{font-size:11px;color:var(--text-secondary)}
+.tc-counts span{color:var(--accent-teal);font-weight:600}
+
+/* TEMPLATE DETAIL */
+.td-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.back-btn{background:none;border:none;color:var(--accent-teal);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:3px;padding:0}
+.back-btn:hover{text-decoration:underline}
+.attr-table{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px}
+.attr-th{display:grid;padding:7px 12px;background:var(--bg-surface);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.attr-tr{display:grid;padding:8px 12px;border-bottom:1px solid rgba(27,58,107,.4);align-items:center;transition:background .08s}
+.attr-tr:last-child{border-bottom:none}
+.attr-tr:hover{background:var(--bg-hover)}
+.attr-cols-5{grid-template-columns:1fr 90px 70px 80px 80px}
+.custom-badge{font-size:9px;background:rgba(155,89,208,.15);color:var(--accent-purple);padding:1px 5px;border-radius:4px;font-weight:600}
+.canonical-key{font-size:10px;color:var(--text-muted);font-family:monospace}
+.type-badge{font-size:10px;background:var(--bg-elevated);color:var(--text-secondary);padding:2px 6px;border-radius:4px}
+.hot-badge{color:var(--accent-orange);font-size:11px}
+
+/* FORM */
+.form-row{margin-bottom:13px}
+.form-label{font-size:10px;color:var(--text-muted);margin-bottom:4px;display:flex;align-items:center;gap:5px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.req{color:var(--accent-red)}
+.form-input{width:100%;padding:7px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);outline:none;transition:border-color .12s}
+.form-input:focus{border-color:var(--accent-teal)}
+.form-select{width:100%;padding:7px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);outline:none}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-section-label{font-size:11px;font-weight:700;color:var(--accent-teal);text-transform:uppercase;letter-spacing:.4px;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.slider{width:100%;accent-color:var(--accent-teal);margin-top:4px}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-xl);width:700px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.modal-sm{width:460px}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-weight:700;font-size:15px}
+.modal-body{flex:1;overflow:auto;padding:20px}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+/* MANAGE */
+.manage-table{width:100%;border-collapse:collapse}
+.manage-th{padding:7px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--bg-surface);position:sticky;top:0}
+.manage-td{padding:7px 12px;font-size:12px;color:var(--text-secondary);border-bottom:1px solid rgba(27,58,107,.4)}
+
+/* EMPTY */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);padding:48px}
+.empty-icon{font-size:44px;opacity:.35}
+
+/* PAGINATION */
+.pagination{padding:7px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
+.pagination .info{font-size:11px;color:var(--text-muted)}
+.page-btns{display:flex;gap:3px}
+.page-btn{width:26px;height:26px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-secondary);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page-btn.active{background:var(--accent-teal);border-color:var(--accent-teal);color:var(--bg-base);font-weight:700}
+.page-btn:hover:not(.active){background:var(--bg-hover);color:var(--text-primary)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg-elevated);border:1px solid var(--accent-teal);border-radius:var(--radius-lg);padding:10px 16px;font-size:12px;color:var(--text-primary);z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:8px;animation:slideIn .2s ease}
+@keyframes slideIn{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* PHOTO */
+.photo-ph{width:100%;height:110px;background:var(--bg-elevated);border:1px dashed var(--border);border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--text-muted);font-size:11px;cursor:pointer;margin-bottom:16px}
+.photo-ph:hover{border-color:var(--accent-teal)}
+
+/* HIER */
+.hier-row{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:var(--text-secondary)}
+
+/* HOME DASHBOARD */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi-card{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
+.kpi-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi-value{font-size:20px;font-weight:800;color:var(--text-primary)}
+.kpi-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* PASSIVE FEEDBACK */
+.feedback-banner{background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.25);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:20px}
+.fb-title{font-weight:600;font-size:13px;color:var(--text-primary);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fb-sub{font-size:11px;color:var(--text-muted);margin-bottom:12px}
+
+/* ROLE SWITCHER */
+.role-badge{display:flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-elevated);font-size:11px;color:var(--text-secondary);cursor:pointer;transition:all .12s;position:relative;white-space:nowrap}
+.role-badge:hover{border-color:var(--border-light);color:var(--text-primary)}
+.role-badge.platform{border-color:rgba(155,89,208,.4);color:var(--accent-purple);background:rgba(155,89,208,.08)}
+.role-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);width:230px;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.5);overflow:hidden}
+.role-opt{padding:9px 14px;font-size:12px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:8px}
+.role-opt:hover,.role-opt.active{background:var(--bg-elevated);color:var(--text-primary)}
+.role-opt.active{color:var(--accent-teal)}
+.role-opt-right{margin-left:auto;font-size:10px;color:var(--text-muted)}
+
+/* MODEL SWITCHER */
+.model-switcher{display:flex;gap:3px;margin-bottom:22px;background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:4px}
+.model-tab{flex:1;padding:8px 10px;border-radius:var(--radius);font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .12s;color:var(--text-muted);border:1px solid transparent;line-height:1.3}
+.model-tab:hover{color:var(--text-secondary);background:var(--bg-hover)}
+.model-tab.active{background:var(--bg-elevated);color:var(--text-primary);border-color:var(--border)}
+.model-tab .model-sub{font-size:9px;display:block;font-weight:400;color:var(--text-muted);margin-top:1px}
+.model-tab.active .model-sub{color:var(--text-secondary)}
+
+/* PLATFORM PIPELINE STAGES */
+.pipeline-stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px}
+.pipeline-stage{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:13px 14px}
+.ps-count{font-size:26px;font-weight:800;color:var(--text-primary);margin-bottom:1px}
+.ps-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:2px}
+.ps-label.shadow-s{color:var(--text-muted)}
+.ps-label.draft-s{color:var(--accent-yellow)}
+.ps-label.candidate-s{color:var(--accent-orange)}
+.ps-label.promoted-s{color:var(--accent-green)}
+.ps-desc{font-size:10px;color:var(--text-muted)}
+
+/* ADOPTION TABLE */
+.adoption-cols{grid-template-columns:2fr 1.2fr 90px 90px 80px 80px}
+.adoption-th-row{display:grid;padding:7px 12px;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--bg-surface)}
+.adoption-table-row{display:grid;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(27,58,107,.4);transition:background .08s}
+.adoption-table-row:hover{background:var(--bg-hover)}
+.stage-chip{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:700;white-space:nowrap;display:inline-block}
+.stage-chip.shadow{background:rgba(82,97,128,.2);color:var(--text-muted)}
+.stage-chip.draft{background:rgba(245,200,66,.15);color:var(--accent-yellow)}
+.stage-chip.candidate{background:rgba(255,140,0,.15);color:var(--accent-orange)}
+
+/* PROMOTION CARDS */
+.promotion-card{background:var(--bg-surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px}
+.promo-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px}
+.promo-name{font-size:14px;font-weight:700;color:var(--text-primary)}
+.promo-meta{font-size:11px;color:var(--text-muted);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tenant-defs{background:var(--bg-elevated);border-radius:var(--radius);padding:8px 10px;margin-bottom:12px}
+.tenant-def-row{display:grid;grid-template-columns:160px 1fr 70px 100px;gap:8px;padding:4px 0;border-bottom:1px solid rgba(27,58,107,.4);align-items:center;font-size:11px}
+.tenant-def-row:last-child{border-bottom:none}
+.canonical-form{display:grid;grid-template-columns:1fr 90px 1fr;gap:8px;align-items:end;margin-bottom:12px}
+
+/* READ-ONLY BANNER */
+.readonly-banner{background:rgba(82,97,128,.08);border:1px solid rgba(82,97,128,.25);border-radius:var(--radius-lg);padding:10px 14px;font-size:12px;color:var(--text-secondary);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+
+/* DEMO PANEL */
+.demo-pill{position:fixed;bottom:20px;right:20px;z-index:2000;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.demo-toggle{padding:5px 13px;background:var(--bg-surface-2);border:1px solid var(--border-light);border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;color:var(--text-muted);box-shadow:0 4px 16px rgba(0,0,0,.45);display:flex;align-items:center;gap:7px;transition:all .12s;user-select:none}
+.demo-toggle:hover{color:var(--text-secondary);border-color:var(--accent-teal)}
+.demo-card{background:var(--bg-surface-2);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:14px;width:248px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.demo-section-label{font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.demo-opt{padding:6px 10px;border-radius:var(--radius);cursor:pointer;border:1px solid transparent;transition:all .12s;margin-bottom:3px}
+.demo-opt:hover{background:var(--bg-hover)}
+.demo-opt.am{background:var(--bg-elevated);border-color:var(--accent-teal)}
+.demo-opt.ar{background:rgba(155,89,208,.1);border-color:rgba(155,89,208,.35)}
+.demo-opt .dl{font-size:12px;font-weight:600;color:var(--text-secondary)}
+.demo-opt .ds{font-size:10px;color:var(--text-muted);margin-top:1px}
+.demo-opt.am .dl{color:var(--accent-teal)}
+.demo-opt.ar .dl{color:var(--accent-purple)}
+
+/* SUCCESS NOTICE */
+.success-notice{background:rgba(61,214,140,.06);border:1px solid rgba(61,214,140,.25);border-radius:var(--radius-lg);padding:12px 14px;font-size:12px;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* ASSET TYPEAHEAD */
+.ta-wrap{position:relative}
+.ta-results{position:absolute;top:calc(100% + 3px);left:0;right:0;background:var(--bg-surface-2);border:1px solid var(--border-light);border-radius:var(--radius-lg);z-index:600;max-height:264px;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.58)}
+.ta-item{padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(27,58,107,.3);transition:background .08s;display:flex;align-items:flex-start;gap:9px}
+.ta-item:last-child{border-bottom:none}
+.ta-item:hover{background:var(--bg-hover)}
+.ta-icon{font-size:18px;flex-shrink:0;line-height:1.4}
+.ta-name{font-size:12px;font-weight:600;color:var(--text-primary);display:flex;align-items:center;gap:6px}
+.ta-path{font-size:10px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.ta-sep{color:rgba(82,97,128,.4)}
+.ta-level-badge{font-size:9px;background:rgba(255,140,0,.15);color:var(--accent-orange);padding:1px 5px;border-radius:4px;font-weight:600}
+.ta-no-results{padding:14px 12px;font-size:12px;color:var(--text-muted);text-align:center}
+/* TAXONOMY CASCADE */
+.tax-cascade{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px;padding:9px 11px;background:var(--bg-elevated);border-radius:var(--radius);border:1px solid rgba(0,212,212,.18)}
+.tax-lvl-label{font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tax-lvl-val{font-size:11px;color:var(--accent-teal);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tax-lvl-val.unset{color:var(--text-muted);font-style:italic;font-weight:400}
+.tax-lvl-select{width:100%;background:var(--bg-surface-2);color:var(--accent-teal);border:1px solid rgba(0,212,212,.25);borderRadius:var(--radius);padding:2px 4px;fontSize:11px;fontWeight:500}
+/* ATTR FILTER PANEL */
+.attr-filter-row{padding:6px 16px;border-bottom:1px solid var(--border);background:rgba(0,212,212,.03);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.filter-chip{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:11px;background:rgba(0,212,212,.1);color:var(--accent-teal);border:1px solid rgba(0,212,212,.3)}
+.filter-chip-x{cursor:pointer;color:var(--text-muted);margin-left:3px;line-height:1}
+.filter-chip-x:hover{color:var(--accent-red)}
+/* SURVEY FORM */
+.svar-row{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:11px;margin-bottom:8px}
+.svar-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
+.svar-name{font-size:12px;font-weight:600;color:var(--text-primary)}
+.svar-score-big{font-size:22px;font-weight:800;min-width:38px;text-align:right;flex-shrink:0}
+.svar-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+/* ASSESS DATE — in cvar card */
+.cvar-assess-date{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--text-secondary)}
+.cvar-assess-date.stale{color:var(--accent-orange)}
+/* GUARD MODAL */
+.guard-warn{background:rgba(240,78,78,.08);border:1px solid rgba(240,78,78,.3);border-radius:var(--radius);padding:12px 14px;display:flex;gap:9px;align-items:flex-start;margin-bottom:14px;font-size:12px;color:var(--text-secondary)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useEffect,useCallback}=React;
+
+// ── COLOURS ──────────────────────────────────────────────────────────────
+const CVAR_COLORS=['#00d4d4','#9b59d0','#3dd68c','#ff8c00','#f5c842','#f04e4e'];
+
+function scoreColor(s){
+  if(s>=7.5)return'var(--accent-green)';
+  if(s>=5)return'var(--accent-teal)';
+  if(s>=3)return'var(--accent-orange)';
+  return'var(--accent-red)';
+}
+function scoreClass(s){
+  if(s>=7.5)return'good';
+  if(s>=5)return'ok';
+  if(s>=3)return'warn';
+  return'bad';
+}
+function condLabel(s){
+  if(s>=7.5)return'Good';
+  if(s>=5)return'Fair';
+  if(s>=3)return'Poor';
+  return'Critical';
+}
+
+// ── DATA ─────────────────────────────────────────────────────────────────
+const ASSET_TYPES=['Road Carriageway','Bridge','Building','Stormwater Pipe','Culvert','Footpath'];
+const TYPE_META={
+  'Road Carriageway':{icon:'🛣️',pill:'road',subtypes:['Sealed Road','Unsealed Road','Arterial Road','Local Road']},
+  'Bridge':{icon:'🌉',pill:'bridge',subtypes:['Road Bridge','Pedestrian Bridge','Rail Bridge']},
+  'Building':{icon:'🏛️',pill:'building',subtypes:['Administration Building','Community Hall','Depot','Public Toilet']},
+  'Stormwater Pipe':{icon:'🔧',pill:'pipe',subtypes:['Concrete Pipe','PVC Pipe','HDPE Pipe']},
+  'Culvert':{icon:'🌀',pill:'pipe',subtypes:['Box Culvert','Pipe Culvert']},
+  'Footpath':{icon:'🚶',pill:'road',subtypes:['Concrete Footpath','Asphalt Footpath','Gravel Path']},
+};
+
+const TEMPLATES={
+  'Road Carriageway':{
+    attrs:[
+      {key:'surface_area',label:'Surface Area',type:'Number',unit:'m²',required:true},
+      {key:'width',label:'Width',type:'Number',unit:'m',required:true},
+      {key:'length',label:'Length',type:'Number',unit:'m',required:true},
+      {key:'surface_material',label:'Surface Material',type:'Enum',options:['Asphalt','Concrete','Gravel','Chip Seal'],required:true},
+      {key:'number_of_lanes',label:'Number of Lanes',type:'Number',unit:'lanes'},
+      {key:'construction_year',label:'Construction Year',type:'Number',unit:'yr'},
+      {key:'design_life',label:'Design Life',type:'Number',unit:'yrs'},
+      {key:'speed_limit',label:'Speed Limit',type:'Number',unit:'km/h'},
+      {key:'traffic_volume_aadt',label:'Traffic Volume (AADT)',type:'Number',unit:'veh/day',custom:true,tenantCount:4},
+    ],
+    condVars:[
+      {key:'surface_condition',label:'Surface Condition',scale:'0–10'},
+      {key:'pavement_condition',label:'Pavement Condition (PCI)',scale:'0–10'},
+      {key:'cracking_severity',label:'Cracking Severity',scale:'0–10'},
+      {key:'rutting',label:'Rutting',scale:'0–10'},
+    ],
+  },
+  'Bridge':{
+    attrs:[
+      {key:'deck_area',label:'Deck Area',type:'Number',unit:'m²',required:true},
+      {key:'span_length',label:'Span Length',type:'Number',unit:'m',required:true},
+      {key:'load_limit',label:'Load Limit',type:'Number',unit:'t',required:true},
+      {key:'bridge_material',label:'Bridge Material',type:'Enum',options:['Reinforced Concrete','Steel','Timber','Prestressed Concrete'],required:true},
+      {key:'construction_year',label:'Construction Year',type:'Number',unit:'yr'},
+      {key:'deck_width',label:'Deck Width',type:'Number',unit:'m'},
+    ],
+    condVars:[
+      {key:'deck_condition',label:'Deck Condition',scale:'0–10'},
+      {key:'superstructure',label:'Superstructure Condition',scale:'0–10'},
+      {key:'substructure',label:'Substructure Condition',scale:'0–10'},
+      {key:'railing',label:'Railing / Safety Barrier',scale:'0–10'},
+    ],
+  },
+  'Building':{
+    attrs:[
+      {key:'gross_floor_area',label:'Gross Floor Area',type:'Number',unit:'m²',required:true},
+      {key:'number_of_floors',label:'Number of Floors',type:'Number',unit:'floors',required:true},
+      {key:'construction_year',label:'Construction Year',type:'Number',unit:'yr'},
+      {key:'building_material',label:'Building Material',type:'Enum',options:['Brick','Concrete','Steel Frame','Timber Frame']},
+      {key:'roof_type',label:'Roof Type',type:'Enum',options:['Pitched Metal','Flat Concrete','Flat Membrane','Tiled']},
+    ],
+    condVars:[
+      {key:'structural',label:'Structural Condition',scale:'0–10'},
+      {key:'roof',label:'Roof Condition',scale:'0–10'},
+      {key:'mechanical',label:'Mechanical (HVAC/Lift)',scale:'0–10'},
+      {key:'electrical',label:'Electrical Condition',scale:'0–10'},
+    ],
+  },
+  'Stormwater Pipe':{
+    attrs:[
+      {key:'pipe_diameter',label:'Pipe Diameter',type:'Number',unit:'mm',required:true},
+      {key:'pipe_length',label:'Pipe Length',type:'Number',unit:'m',required:true},
+      {key:'pipe_material',label:'Pipe Material',type:'Enum',options:['Concrete','PVC','HDPE','Vitrified Clay'],required:true},
+      {key:'installation_year',label:'Installation Year',type:'Number',unit:'yr'},
+      {key:'invert_depth',label:'Invert Depth',type:'Number',unit:'m'},
+    ],
+    condVars:[
+      {key:'structural',label:'Structural Condition',scale:'0–10'},
+      {key:'blockage_risk',label:'Blockage Risk',scale:'0–10'},
+      {key:'joint_condition',label:'Joint Condition',scale:'0–10'},
+    ],
+  },
+};
+
+// Tenant-level condition config — separate from platform template definition.
+// weight is NOT intrinsic to a condition variable; it only exists when tenant enables weighted avg.
+// Default: wgtAvgEnabled=false → condition_score is manually entered per survey (or omitted).
+// Road Carriageway shown as an example with weighted avg configured.
+const TENANT_COND_CONFIG={
+  'Road Carriageway':{wgtAvgEnabled:true,varWeights:{surface_condition:25,pavement_condition:35,cracking_severity:25,rutting:15}},
+  'Bridge':{wgtAvgEnabled:false,varWeights:{}},
+  'Building':{wgtAvgEnabled:false,varWeights:{}},
+  'Stormwater Pipe':{wgtAvgEnabled:false,varWeights:{}},
+};
+
+const ASSET_ATTRS={
+  'a1':{surface_area:12600,width:7.5,length:1680,surface_material:'Asphalt',number_of_lanes:2,construction_year:1998,design_life:30,speed_limit:60},
+  'a1a':{surface_area:5400,width:7.5,length:720,surface_material:'Asphalt',number_of_lanes:2,construction_year:1998,design_life:30,speed_limit:60},
+  'a1b':{surface_area:7200,width:7.5,length:960,surface_material:'Chip Seal',number_of_lanes:2,construction_year:2004,design_life:25,speed_limit:50},
+  'a2':{deck_area:420,span_length:35,load_limit:44,bridge_material:'Reinforced Concrete',construction_year:1975,deck_width:12},
+  'a3':{gross_floor_area:3200,number_of_floors:4,construction_year:1982,building_material:'Brick',roof_type:'Flat Concrete'},
+  'a4':{pipe_diameter:900,pipe_length:340,pipe_material:'Concrete',installation_year:1990,invert_depth:2.4},
+  'a5':{surface_area:8400,width:6.0,length:1400,surface_material:'Gravel',number_of_lanes:1,construction_year:1985,design_life:20},
+};
+
+const ASSET_CONDITIONS={
+  // condition_score (overall) = weighted avg here since Road Carriageway has wgtAvgEnabled:true
+  // For Bridge/Building/Stormwater: overall is manually entered per survey (wgtAvgEnabled:false)
+  // vars contain only observation data: score, surveyDate, surveyor — NO weight
+  'a1':{overall:6.2,vars:[
+    {key:'surface_condition',label:'Surface Condition',score:6.5,surveyDate:'2025-11-14',surveyor:'Council Inspector'},
+    {key:'pavement_condition',label:'Pavement Condition (PCI)',score:6.0,surveyDate:'2025-11-14',surveyor:'Pavement Solutions Pty'},
+    {key:'cracking_severity',label:'Cracking Severity',score:6.2,surveyDate:'2025-11-14',surveyor:'Council Inspector'},
+    {key:'rutting',label:'Rutting',score:6.3,surveyDate:'2025-11-14',surveyor:'Council Inspector'},
+  ]},
+  'a1b':{overall:4.8,vars:[
+    {key:'surface_condition',label:'Surface Condition',score:4.5,surveyDate:'2025-06-20',surveyor:'Council Inspector'},
+    {key:'pavement_condition',label:'Pavement Condition (PCI)',score:4.9,surveyDate:'2025-06-20',surveyor:'Pavement Solutions Pty'},
+    {key:'cracking_severity',label:'Cracking Severity',score:4.6,surveyDate:'2025-06-20',surveyor:'Council Inspector'},
+    {key:'rutting',label:'Rutting',score:5.2,surveyDate:'2025-06-20',surveyor:'Council Inspector'},
+  ]},
+  'a2':{overall:5.6,vars:[
+    {key:'deck_condition',label:'Deck Condition',score:5.5,surveyDate:'2024-03-10',surveyor:'BridgeCheck Engineering'},
+    {key:'superstructure',label:'Superstructure Condition',score:5.8,surveyDate:'2024-03-10',surveyor:'BridgeCheck Engineering'},
+    {key:'substructure',label:'Substructure Condition',score:5.6,surveyDate:'2024-03-10',surveyor:'BridgeCheck Engineering'},
+    {key:'railing',label:'Railing / Safety Barrier',score:5.2,surveyDate:'2024-03-10',surveyor:'BridgeCheck Engineering'},
+  ]},
+  'a3':{overall:7.1,vars:[
+    {key:'structural',label:'Structural Condition',score:8.0,surveyDate:'2025-01-22',surveyor:'Archistructural Consulting'},
+    {key:'roof',label:'Roof Condition',score:7.0,surveyDate:'2025-01-22',surveyor:'Archistructural Consulting'},
+    {key:'mechanical',label:'Mechanical (HVAC/Lift)',score:6.5,surveyDate:'2026-04-08',surveyor:'BuildTech Services'},
+    {key:'electrical',label:'Electrical Condition',score:7.0,surveyDate:'2025-09-05',surveyor:'ElectroCert Pty'},
+  ]},
+  'a4':{overall:5.1,vars:[
+    {key:'structural',label:'Structural Condition',score:5.0,surveyDate:'2024-08-17',surveyor:'StormAudit Services'},
+    {key:'blockage_risk',label:'Blockage Risk',score:5.3,surveyDate:'2024-08-17',surveyor:'StormAudit Services'},
+    {key:'joint_condition',label:'Joint Condition',score:4.8,surveyDate:'2024-08-17',surveyor:'StormAudit Services'},
+  ]},
+};
+
+const TAXONOMY_FLAT=[
+  {assetClass:'Transport & Civil',group:'Road Network',subgroup:'Carriageway',type:'Road Carriageway',tmplKey:'Road Carriageway',icon:'🛣️'},
+  {assetClass:'Transport & Civil',group:'Road Network',subgroup:'Paths & Footways',type:'Footpath',tmplKey:'Footpath',icon:'🚶'},
+  {assetClass:'Transport & Civil',group:'Bridges & Culverts',subgroup:'Bridges',type:'Road Bridge',tmplKey:'Bridge',icon:'🌉'},
+  {assetClass:'Transport & Civil',group:'Bridges & Culverts',subgroup:'Bridges',type:'Pedestrian Bridge',tmplKey:'Bridge',icon:'🌉'},
+  {assetClass:'Transport & Civil',group:'Bridges & Culverts',subgroup:'Culverts',type:'Box Culvert',tmplKey:'Culvert',icon:'🌀'},
+  {assetClass:'Transport & Civil',group:'Bridges & Culverts',subgroup:'Culverts',type:'Pipe Culvert',tmplKey:'Culvert',icon:'🌀'},
+  {assetClass:'Property & Buildings',group:'Buildings',subgroup:'Civic Buildings',type:'Administration Building',tmplKey:'Building',icon:'🏛️'},
+  {assetClass:'Property & Buildings',group:'Buildings',subgroup:'Community Facilities',type:'Community Hall',tmplKey:'Building',icon:'🏛️'},
+  {assetClass:'Property & Buildings',group:'Buildings',subgroup:'Operational Facilities',type:'Depot / Workshop',tmplKey:'Building',icon:'🏭'},
+  {assetClass:'Property & Buildings',group:'Buildings',subgroup:'Operational Facilities',type:'Public Amenities Block',tmplKey:'Building',icon:'🚻'},
+  {assetClass:'Drainage & Water',group:'Stormwater Network',subgroup:'Pipes & Conduits',type:'Stormwater Pipe',tmplKey:'Stormwater Pipe',icon:'🔧'},
+  {assetClass:'Drainage & Water',group:'Stormwater Network',subgroup:'Structures',type:'Stormwater Pit',tmplKey:'Stormwater Pipe',icon:'🔧'},
+  {assetClass:'Drainage & Water',group:'Stormwater Network',subgroup:'Structures',type:'Gross Pollutant Trap',tmplKey:'Stormwater Pipe',icon:'🔧'},
+  {assetClass:'Transport & Civil',group:'Road Network',subgroup:'Structures',type:'Retaining Wall',tmplKey:null,icon:'🧱'},
+  {assetClass:'Property & Buildings',group:'Open Space',subgroup:'Recreational',type:'Playground Equipment',tmplKey:null,icon:'🎠'},
+];
+
+const ATTR_LABEL='Attributes'; // infra/gov vertical; manufacturing = 'Specifications'
+
+const TAXONOMY_FEEDBACK_LOG=[
+  {query:'road',selectedType:'Road Carriageway',matchedLevel:'type',count:45,note:''},
+  {query:'bridge',selectedType:'Road Bridge',matchedLevel:'type',count:22,note:''},
+  {query:'concrete pipe',selectedType:'Stormwater Pipe',matchedLevel:'type',count:12,note:''},
+  {query:'hvac',selectedType:'Administration Building',matchedLevel:'group',count:8,note:'Matched "Buildings" group — user expected HVAC as an asset type'},
+  {query:'water',selectedType:'Stormwater Pipe',matchedLevel:'subgroup',count:15,note:''},
+  {query:'retaining',selectedType:null,matchedLevel:null,count:4,note:'No match — 4 users abandoned; retaining wall not in taxonomy'},
+];
+
+// remaining life (yrs) derived from condition score × design life
+function remainingLife(condScore,designLife=30){
+  return Math.round((condScore/10)*designLife);
+}
+function annualDeprRate(designLife=30){return(100/designLife).toFixed(2);}
+
+const ASSETS=[
+  {id:'a1',name:'Queens Road — Sealed',assetId:'RD-001',type:'Road Carriageway',subtype:'Sealed Road',manufacturer:'Council DRW',status:'Active',location:'Ward 1 — North Riverside',purchaseCost:'$1,240,000',replacementCost:'$1,680,000',installDate:'2000-06-15',designLife:30,
+    children:[
+      {id:'a1a',name:'Queens Rd — North Section',assetId:'RD-001-N',type:'Road Carriageway',subtype:'Sealed Road',manufacturer:'Council DRW',status:'Active',location:'Ward 1 — Northern Sector',purchaseCost:'$520,000',replacementCost:'$700,000',installDate:'2000-06-15',designLife:30},
+      {id:'a1b',name:'Queens Rd — South Section',assetId:'RD-001-S',type:'Road Carriageway',subtype:'Sealed Road',manufacturer:'Council DRW',status:'Maintenance',location:'Ward 1 — Southern Sector',purchaseCost:'$720,000',replacementCost:'$980,000',installDate:'2000-06-15',designLife:25},
+    ]},
+  {id:'a2',name:'Riverside Bridge — Main',assetId:'BR-001',type:'Bridge',subtype:'Road Bridge',manufacturer:'Structural Works Pty',status:'Active',location:'Ward 2 — River Precinct',purchaseCost:'$3,400,000',replacementCost:'$4,800,000',installDate:'1975-03-01',designLife:80,
+    children:[
+      {id:'a2a',name:'Bridge — North Abutment',assetId:'BR-001-NA',type:'Bridge',subtype:'Road Bridge',manufacturer:'Structural Works Pty',status:'Active',location:'Ward 2 — River Precinct',purchaseCost:'',replacementCost:'',installDate:'1975-03-01',designLife:80},
+    ]},
+  {id:'a3',name:'Council Administration Building',assetId:'BL-001',type:'Building',subtype:'Administration Building',manufacturer:'Heritage Constructions',status:'Active',location:'Civic Precinct',purchaseCost:'$8,200,000',replacementCost:'$12,500,000',installDate:'1982-09-10',designLife:50,children:[]},
+  {id:'a4',name:'Smith St Stormwater Main',assetId:'SW-001',type:'Stormwater Pipe',subtype:'Concrete Pipe',manufacturer:'Humes',status:'Active',location:'Ward 3 — Industrial',purchaseCost:'$480,000',replacementCost:'$720,000',installDate:'1990-01-01',designLife:60,children:[]},
+  {id:'a5',name:'Park Ave — Unsealed',assetId:'RD-002',type:'Road Carriageway',subtype:'Unsealed Road',manufacturer:'Council DRW',status:'Active',location:'Ward 4 — Rural Fringe',purchaseCost:'$340,000',replacementCost:'$420,000',installDate:'1985-01-01',designLife:20,children:[]},
+  {id:'a6',name:'Riverside Community Hall',assetId:'BL-002',type:'Building',subtype:'Community Hall',manufacturer:'Taylor Constructions',status:'Inactive',location:'Ward 2 — Central',purchaseCost:'$2,100,000',replacementCost:'$3,200,000',installDate:'1968-05-20',designLife:50,children:[]},
+];
+
+const ACTIVITY=[
+  {text:'Condition survey completed — Queens Rd South Section',time:'2 days ago'},
+  {text:'Work order #WO-4521 closed — Admin Building HVAC',time:'4 days ago'},
+  {text:'Attribute template applied — Stormwater Pipe (Concrete)',time:'1 week ago'},
+  {text:'Bridge inspection scheduled — Riverside Bridge Main',time:'1 week ago'},
+  {text:'Depreciation calculation updated — Admin Building',time:'2 weeks ago'},
+];
+
+const USERS=[
+  {id:'u1',name:'Olivia Tran',email:'o.tran@riverside.gov.au',role:'Asset Manager',status:'Active',rate:'$85/hr'},
+  {id:'u2',name:'Marcus Okello',email:'m.okello@riverside.gov.au',role:'Field Inspector',status:'Active',rate:'$72/hr'},
+  {id:'u3',name:'Priya Sharma',email:'p.sharma@riverside.gov.au',role:'A&V Accountant',status:'Active',rate:'$90/hr'},
+  {id:'u4',name:'James Nguyen',email:'j.nguyen@riverside.gov.au',role:'Maintenance Admin',status:'Active',rate:'$68/hr'},
+  {id:'u5',name:'Sophia Müller',email:'s.muller@riverside.gov.au',role:'Requester',status:'Active',rate:'—'},
+  {id:'u6',name:'Connor Walsh',email:'c.walsh@riverside.gov.au',role:'Field Inspector',status:'Inactive',rate:'$72/hr'},
+];
+
+const LOCATIONS=[
+  {id:'l1',name:'City of Riverside Council',type:'Organisation',children:[
+    {id:'l2',name:'Ward 1 — North Riverside',type:'Ward',children:[
+      {id:'l3',name:'Queens Road Corridor',type:'Precinct',children:[
+        {id:'l4',name:'Northern Sector',type:'Segment'},
+        {id:'l5',name:'Southern Sector',type:'Segment'},
+      ]},
+    ]},
+    {id:'l6',name:'Ward 2 — Central',type:'Ward',children:[
+      {id:'l7',name:'River Precinct',type:'Precinct',children:[]},
+      {id:'l8',name:'Civic Precinct',type:'Precinct',children:[]},
+    ]},
+    {id:'l9',name:'Ward 3 — Industrial',type:'Ward',children:[]},
+    {id:'l10',name:'Ward 4 — Rural Fringe',type:'Ward',children:[]},
+  ]}
+];
+
+// count assets per type
+function countByType(type){
+  function c(arr){return arr.reduce((n,a)=>{
+    let x=a.type===type?1:0;
+    if(a.children)x+=c(a.children);
+    return n+x;
+  },0);}
+  return c(ASSETS);
+}
+
+function flattenVisible(arr,expanded,depth=0){
+  const out=[];
+  for(const a of arr){
+    out.push({...a,depth});
+    if(a.children&&a.children.length&&expanded[a.id])
+      out.push(...flattenVisible(a.children,expanded,depth+1));
+  }
+  return out;
+}
+
+// ── SMALL COMPONENTS ─────────────────────────────────────────────────────
+function TypePill({type}){
+  const m=TYPE_META[type]||{pill:'road'};
+  return <span className={`pill ${m.pill}`}>{type}</span>;
+}
+function StatusPill({status}){
+  const cls={Active:'active',Inactive:'inactive',Maintenance:'maintenance'}[status]||'inactive';
+  return <span className={`pill ${cls}`}>{status}</span>;
+}
+
+// ── CONDITION BAR (table row) ─────────────────────────────────────────────
+function CondCell({assetId}){
+  const cond=ASSET_CONDITIONS[assetId];
+  if(!cond)return <span style={{color:'var(--text-muted)',fontSize:11}}>No survey</span>;
+  const s=cond.overall;
+  const col=scoreColor(s);
+  return(
+    <div className="cond-cell">
+      <span className="cond-score" style={{color:col}}>{s.toFixed(1)}</span>
+      <div className="cond-bar-track">
+        <div className="cond-bar-fill" style={{width:`${s*10}%`,background:col}}/>
+      </div>
+      <span className="cond-label">{condLabel(s)}</span>
+    </div>
+  );
+}
+
+// ── PANEL HERO WITH CONDITION STRIP ──────────────────────────────────────
+function PanelHero({asset,onClose}){
+  const cond=ASSET_CONDITIONS[asset.id];
+  const meta=TYPE_META[asset.type]||{icon:'📋'};
+  const tmpl=TEMPLATES[asset.type];
+  const condCfg=TENANT_COND_CONFIG[asset.type]||{wgtAvgEnabled:false,varWeights:{}};
+  const [surveyOpen,setSurveyOpen]=useState(false);
+
+  return(
+    <>
+    <div className="panel-hero">
+      <div className="panel-hero-top">
+        <div className="asset-type-icon">{meta.icon}</div>
+        <div className="panel-asset-info">
+          <div className="panel-asset-name">{asset.name}</div>
+          <div className="panel-asset-meta">
+            <span style={{fontFamily:'monospace',fontSize:10}}>{asset.assetId}</span>
+            <TypePill type={asset.type}/>
+            <StatusPill status={asset.status}/>
+          </div>
+        </div>
+        <button className="panel-hero-close" onClick={onClose}>✕</button>
+      </div>
+
+      {/* CONDITION HERO STRIP — variable bars are primary; overall is optional badge */}
+      {cond?(
+        <div className="condition-hero-strip">
+          <div className="chs-bars">
+            {cond.vars.map((v,i)=>(
+              <div key={v.key} className="chs-bar-row">
+                <span className="chs-bar-name">{v.label}</span>
+                <div className="chs-bar-track">
+                  <div className="chs-bar-fill" style={{width:`${v.score*10}%`,background:CVAR_COLORS[i%CVAR_COLORS.length]}}/>
+                </div>
+                <span className="chs-bar-val" style={{color:CVAR_COLORS[i%CVAR_COLORS.length]}}>{v.score.toFixed(1)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="chs-actions">
+            <button className="btn primary" style={{fontSize:11}} onClick={()=>setSurveyOpen(true)}>+ Survey</button>
+            {condCfg.wgtAvgEnabled&&(
+              <div style={{textAlign:'center',padding:'4px 8px',background:'var(--bg-elevated)',borderRadius:'var(--radius)',border:'1px solid var(--border)'}}>
+                <div style={{fontSize:22,fontWeight:800,color:scoreColor(cond.overall),lineHeight:1}}>{cond.overall.toFixed(1)}</div>
+                <div style={{fontSize:9,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.4px',marginTop:2}}>overall</div>
+              </div>
+            )}
+            <span style={{fontSize:10,color:'var(--text-muted)',textAlign:'right'}}>Last survey<br/>{cond.vars.length?new Date(Math.max(...cond.vars.map(v=>new Date(v.surveyDate)))).toISOString().slice(0,10):'—'}</span>
+          </div>
+        </div>
+      ):(
+        <div style={{background:'var(--bg-surface-2)',border:'1px dashed var(--border)',borderRadius:'var(--radius-lg)',padding:'16px',textAlign:'center'}}>
+          <div style={{fontSize:28,marginBottom:6,opacity:.4}}>📋</div>
+          <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:8}}>No condition survey recorded</div>
+          <button className="btn primary" style={{fontSize:11}} onClick={()=>setSurveyOpen(true)}>+ Record First Survey</button>
+        </div>
+      )}
+    </div>
+    {surveyOpen&&tmpl&&<SurveyForm asset={asset} onClose={()=>setSurveyOpen(false)}/>}
+    {surveyOpen&&!tmpl&&(
+      <div className="modal-overlay" onClick={()=>setSurveyOpen(false)}>
+        <div className="modal" style={{maxWidth:400}}>
+          <div className="modal-header"><span className="modal-title">No Condition Template</span><button className="modal-close" onClick={()=>setSurveyOpen(false)}>×</button></div>
+          <div className="modal-body"><p style={{fontSize:12,color:'var(--text-secondary)'}}>Asset type <strong>{asset.type}</strong> has no condition template configured. Contact your platform administrator to add condition variables for this asset type.</p></div>
+          <div className="modal-footer"><button className="btn secondary" onClick={()=>setSurveyOpen(false)}>Close</button></div>
+        </div>
+      </div>
+    )}
+    </>
+  );
+}
+
+// ── VALUATION STRIP ──────────────────────────────────────────────────────
+function ValuationStrip({asset}){
+  const cond=ASSET_CONDITIONS[asset.id];
+  const dl=asset.designLife||30;
+  const rl=cond?remainingLife(cond.overall,dl):'—';
+  const dr=annualDeprRate(dl);
+  const instYear=asset.installDate?new Date(asset.installDate).getFullYear():'—';
+  const age=instYear!=='—'?2026-instYear:'—';
+
+  return(
+    <>
+      <div className="aasb-banner">
+        <span className="icon">⚖️</span>
+        <span>A&V valuation data — condition score drives remaining life estimate for AASB 116 component depreciation.</span>
+      </div>
+      <div className="val-strip">
+        <div className="val-cell">
+          <div className="vc-label">Condition Score</div>
+          <div className="vc-value" style={{color:cond?scoreColor(cond.overall):'var(--text-muted)'}}>{cond?cond.overall.toFixed(1):'—'}</div>
+          <div className="vc-sub">{cond?condLabel(cond.overall):'No survey'}</div>
+        </div>
+        <div className="val-cell">
+          <div className="vc-label">Remaining Life</div>
+          <div className="vc-value">{rl} {rl!=='—'?'yrs':''}</div>
+          <div className="vc-sub">of {dl} yr design life</div>
+        </div>
+        <div className="val-cell">
+          <div className="vc-label">Replacement Cost</div>
+          <div className="vc-value">{asset.replacementCost||'—'}</div>
+          <div className="vc-sub">Current estimate</div>
+        </div>
+        <div className="val-cell">
+          <div className="vc-label">Annual Depreciation</div>
+          <div className="vc-value">{dr}%</div>
+          <div className="vc-sub">Straight line · {age} yrs old</div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── CONDITION TAB — condition variables + optional overall score ──────────
+function AssetProfileTab({asset}){
+  const cond=ASSET_CONDITIONS[asset.id];
+
+  return(
+    <div>
+      {/* CONDITION VARIABLES */}
+      <div className="section">
+        <div className="section-title">
+          Condition Variables <span className="hc-tag">HC-9489</span>
+        </div>
+        {cond?(
+          <>
+            {cond.vars.map((v,i)=>{
+              const col=CVAR_COLORS[i%CVAR_COLORS.length];
+              return(
+                <div key={v.key} className="cvar-card">
+                  <div className="cvar-card-top">
+                    <span className="cvar-card-name">{v.label}</span>
+                    <span className="cvar-score-pill" style={{color:col}}>{v.score.toFixed(1)} <span style={{fontSize:11,fontWeight:400,color:'var(--text-muted)'}}>/10</span></span>
+                  </div>
+                  <div className="cvar-bar-track">
+                    <div className="cvar-bar-fill" style={{width:`${v.score*10}%`,background:col}}/>
+                  </div>
+                  <div className="cvar-meta-row">
+                    <span className={`cvar-assess-date${(()=>{const d=new Date(v.surveyDate);const ageYrs=(Date.now()-d)/(1000*60*60*24*365);return ageYrs>2?' stale':''})()}`}>
+                      📅 {v.surveyDate}
+                    </span>
+                    <span>by {v.surveyor}</span>
+                  </div>
+                </div>
+              );
+            })}
+            {(()=>{const cfg=TENANT_COND_CONFIG[asset.type]||{wgtAvgEnabled:false};return(
+              <div style={{padding:'8px 10px',background:'var(--bg-elevated)',borderRadius:'var(--radius)',fontSize:11,color:'var(--text-secondary)',borderLeft:`3px solid ${cfg.wgtAvgEnabled?'var(--accent-teal)':'var(--border)'}`}}>
+                Overall score <strong style={{color:cfg.wgtAvgEnabled?'var(--accent-teal)':'var(--text-secondary)'}}>{cond.overall.toFixed(1)}</strong>
+                {cfg.wgtAvgEnabled
+                  ?' — weighted average (tenant-configured).'
+                  :' — manually recorded summary score (weighted average not configured for this asset type).'}
+              </div>
+            );})()}
+          </>
+        ):(
+          <div style={{textAlign:'center',padding:'16px 0',color:'var(--text-muted)',fontSize:12}}>
+            No survey recorded.
+            <br/><button className="btn" style={{marginTop:8,fontSize:11}}>+ Record Survey</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── OVERVIEW TAB ─────────────────────────────────────────────────────────
+function OverviewTab({asset}){
+  return(
+    <div>
+      {/* VALUATION STRIP — fix 3 */}
+      <ValuationStrip asset={asset}/>
+
+      <div className="section">
+        <div className="section-title">Recent Activity</div>
+        {ACTIVITY.slice(0,4).map((a,i)=>(
+          <div key={i} className="activity-item">
+            <div className="activity-dot"/>
+            <span className="activity-text">{a.text}</span>
+            <span className="activity-time">{a.time}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="section">
+        <div className="section-title">Location Hierarchy</div>
+        {[
+          {icon:'🏢',t:'Organisation: City of Riverside Council'},
+          {icon:'🗺️',t:'Ward: '+asset.location.split(' — ')[0]},
+          {icon:'📍',t:'Precinct: '+asset.location.split(' — ')[1]},
+        ].filter(h=>h.t.split(': ')[1]).map((h,i)=>(
+          <div key={i} className="hier-row"><span>{h.icon}</span>{h.t}</div>
+        ))}
+      </div>
+
+      <div className="section">
+        <div className="section-title">Open Work Orders</div>
+        <div style={{display:'flex',gap:8}}>
+          <div style={{flex:1,background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'10px 12px',textAlign:'center'}}>
+            <div style={{fontSize:22,fontWeight:800,color:'var(--accent-orange)'}}>3</div>
+            <div style={{fontSize:10,color:'var(--text-muted)'}}>Open</div>
+          </div>
+          <div style={{flex:1,background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'10px 12px',textAlign:'center'}}>
+            <div style={{fontSize:22,fontWeight:800,color:'var(--accent-red)'}}>1</div>
+            <div style={{fontSize:10,color:'var(--text-muted)'}}>Overdue</div>
+          </div>
+          <div style={{flex:1,background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'10px 12px',textAlign:'center'}}>
+            <div style={{fontSize:22,fontWeight:800,color:'var(--accent-green)'}}>12</div>
+            <div style={{fontSize:10,color:'var(--text-muted)'}}>Closed YTD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── SPECS TAB ─────────────────────────────────────────────────────────────
+// Zone 1: template-defined attrs — locked keys, user enters values only
+// Zone 2: additional specs — free key-value, user owns schema
+function SpecsTab({asset,onViewTemplate,model}){
+  const tmpl=TEMPLATES[asset.type];
+  const isM1=model===1;
+  const [vals,setVals]=useState({...ASSET_ATTRS[asset.id]||{}});
+  const [extra,setExtra]=useState([]);
+
+  const inputStyle={background:'var(--bg-elevated)',color:'var(--text-primary)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'2px 6px',fontSize:12};
+
+  function renderValInput(a){
+    if(a.type==='Enum') return(
+      <select style={inputStyle} value={vals[a.key]||''} onChange={e=>setVals(p=>({...p,[a.key]:e.target.value}))}>
+        <option value="">— select —</option>
+        {a.options.map(o=><option key={o} value={o}>{o}</option>)}
+      </select>
+    );
+    return <input type={a.type==='Number'?'number':'text'} style={{...inputStyle,width:110}} value={vals[a.key]||''} onChange={e=>setVals(p=>({...p,[a.key]:e.target.value}))}/>;
+  }
+
+  return(
+    <div>
+      {/* Standard asset fields — read-only */}
+      <div className="section">
+        <div className="section-title">Asset Details</div>
+        {[
+          ['Asset ID',<span style={{fontFamily:'monospace',fontSize:11}}>{asset.assetId}</span>],
+          ['Type',<TypePill type={asset.type}/>],
+          ['Subtype',asset.subtype],
+          ['Status',<StatusPill status={asset.status}/>],
+          ['Manufacturer / Owner',asset.manufacturer],
+          ['Location',asset.location],
+          ['Install Date',asset.installDate||'—'],
+          ['Design Life',`${asset.designLife||30} years`],
+          ['Purchase Cost',asset.purchaseCost||'—'],
+          ['Replacement Cost',asset.replacementCost||'—'],
+        ].map(([k,v])=>(
+          <div key={k} className="spec-row">
+            <span className="spec-key">{k}</span>
+            <span className="spec-val">{v}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Zone 1: platform template-defined specs — locked labels, editable values */}
+      {tmpl?(
+        <div className="section">
+          <div className="section-title">
+            Attributes <span className="hc-tag">HC-9489</span>
+            <button className="btn ghost" style={{marginLeft:'auto',fontSize:10,padding:'2px 7px',color:'var(--accent-teal)',border:'1px solid rgba(0,212,212,.25)'}} onClick={()=>onViewTemplate&&onViewTemplate(asset.type)}>
+              {asset.type} template →
+            </button>
+          </div>
+          {tmpl.attrs.filter(a=>!isM1||!a.custom).map(a=>(
+            <div key={a.key} className="spec-row" style={{alignItems:'center'}}>
+              <span className="spec-key" style={{display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
+                {a.required&&<span style={{color:'var(--accent-teal)',fontSize:9,lineHeight:1}}>●</span>}
+                {a.label}
+                {a.unit&&<span style={{color:'var(--text-muted)',fontSize:10}}>({a.unit})</span>}
+                {a.custom&&<span style={{fontSize:9,background:'rgba(99,102,241,.12)',color:'#818cf8',padding:'1px 5px',borderRadius:4}}>Custom</span>}
+              </span>
+              <span className="spec-val">{renderValInput(a)}</span>
+            </div>
+          ))}
+          <div style={{marginTop:8,fontSize:10,color:'var(--text-muted)'}}>
+            <span style={{color:'var(--accent-teal)'}}>●</span> Required for A&amp;V valuation
+          </div>
+        </div>
+      ):(
+        <div className="section">
+          <div className="section-title">Attributes</div>
+          <div style={{color:'var(--text-muted)',fontSize:12,padding:'8px 0'}}>No template configured for {asset.type}.</div>
+        </div>
+      )}
+
+      {/* Zone 2: additional specs — tenant-owned, free key-value */}
+      <div className="section">
+        <div className="section-title">Additional Attributes</div>
+        {extra.length===0&&<div style={{color:'var(--text-muted)',fontSize:12,padding:'4px 0 8px'}}>None recorded.</div>}
+        {extra.map(r=>(
+          <div key={r.id} className="spec-row" style={{alignItems:'center',gap:8}}>
+            <input placeholder="Field name" style={{...inputStyle,width:130,flexShrink:0}} value={r.key} onChange={e=>setExtra(p=>p.map(x=>x.id===r.id?{...x,key:e.target.value}:x))}/>
+            <input placeholder="Value" style={{...inputStyle,flex:1}} value={r.val} onChange={e=>setExtra(p=>p.map(x=>x.id===r.id?{...x,val:e.target.value}:x))}/>
+            <button onClick={()=>setExtra(p=>p.filter(x=>x.id!==r.id))} style={{background:'none',border:'none',color:'var(--text-muted)',cursor:'pointer',fontSize:14,padding:'2px 4px',flexShrink:0}}>✕</button>
+          </div>
+        ))}
+        {!isM1&&<button className="btn" style={{marginTop:6,fontSize:11}} onClick={()=>setExtra(p=>[...p,{id:Date.now(),key:'',val:''}])}>+ Add Attribute</button>}
+      </div>
+    </div>
+  );
+}
+
+// ── SIDE PANEL ────────────────────────────────────────────────────────────
+function SidePanel({asset,onClose,onViewTemplate,model}){
+  const [tab,setTab]=useState('overview');
+  return(
+    <div className="side-panel">
+      <PanelHero asset={asset} onClose={onClose}/>
+      <div className="tab-bar">
+        {[
+          {k:'overview',label:'Overview'},
+          {k:'profile',label:<>Condition <span className="new-badge">new</span></>},
+          {k:'activity',label:'Activity'},
+          {k:'attachments',label:'Attachments'},
+          {k:'specs',label:'Attributes'},
+        ].map(t=>(
+          <div key={t.k} className={`tab${tab===t.k?' active':''}`} onClick={()=>setTab(t.k)}>{t.label}</div>
+        ))}
+      </div>
+      <div className="panel-body">
+        {tab==='overview'&&<OverviewTab asset={asset}/>}
+        {tab==='profile'&&<AssetProfileTab asset={asset}/>}
+        {tab==='activity'&&(
+          <div>
+            {ACTIVITY.map((a,i)=>(
+              <div key={i} className="activity-item">
+                <div className="activity-dot"/>
+                <span className="activity-text">{a.text}</span>
+                <span className="activity-time">{a.time}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {tab==='attachments'&&(
+          <div style={{textAlign:'center',paddingTop:32,color:'var(--text-muted)',fontSize:12}}>
+            <div style={{fontSize:36,marginBottom:8}}>📎</div>
+            No attachments.<br/>
+            <button className="btn" style={{marginTop:12,fontSize:11}}>+ Upload</button>
+          </div>
+        )}
+        {tab==='specs'&&<SpecsTab asset={asset} onViewTemplate={onViewTemplate} model={model}/>}
+      </div>
+    </div>
+  );
+}
+
+// ── ASSETS TABLE ──────────────────────────────────────────────────────────
+function AssetsTable({onSelect,selectedId,typeFilter,setTypeFilter,subtypeFilter,setSubtypeFilter,onNew}){
+  const [expanded,setExpanded]=useState({a1:true,a2:true,a3:true});
+  const [search,setSearch]=useState('');
+  const [attrFilters,setAttrFilters]=useState({});
+
+  // clear attr filters when type changes
+  const prevTypeRef=React.useRef(typeFilter);
+  React.useEffect(()=>{if(prevTypeRef.current!==typeFilter){setAttrFilters({});prevTypeRef.current=typeFilter;}},[typeFilter]);
+
+  const toggle=id=>setExpanded(e=>({...e,[id]:!e[id]}));
+
+  // enum attrs for current type (KOQ 2 filter options)
+  const enumAttrsForType=typeFilter&&TEMPLATES[typeFilter]
+    ?TEMPLATES[typeFilter].attrs.filter(a=>a.type==='Enum')
+    :[];
+
+  function matchesAttrFilters(a){
+    if(!Object.keys(attrFilters).length)return true;
+    const vals=ASSET_ATTRS[a.id]||{};
+    return Object.entries(attrFilters).every(([k,v])=>!v||String(vals[k])===v);
+  }
+
+  let roots=ASSETS;
+  if(typeFilter)roots=ASSETS.filter(a=>a.type===typeFilter);
+  if(subtypeFilter)roots=roots.filter(a=>a.subtype===subtypeFilter);
+
+  function vis(arr,depth=0){
+    const out=[];
+    for(const a of arr){
+      const match=!search||a.name.toLowerCase().includes(search.toLowerCase())||a.assetId.toLowerCase().includes(search.toLowerCase());
+      if(match&&matchesAttrFilters(a))out.push({...a,depth});
+      if(a.children&&a.children.length&&expanded[a.id])out.push(...vis(a.children,depth+1));
+    }
+    return out;
+  }
+  const rows=vis(roots);
+  const subtypes=typeFilter?(TYPE_META[typeFilter]?.subtypes||[]):[];
+
+  // counts for type buttons
+  const typeCounts={};
+  for(const t of ASSET_TYPES){
+    let c=0;
+    function countType(arr){arr.forEach(a=>{if(a.type===t)c++;if(a.children)countType(a.children);});}
+    countType(ASSETS);
+    typeCounts[t]=c;
+  }
+  const totalCount=Object.values(typeCounts).reduce((a,b)=>a+b,0);
+
+  return(
+    <div style={{display:'flex',flexDirection:'column',flex:1,overflow:'hidden'}}>
+      <div className="table-toolbar">
+        <span className="title">Assets</span>
+        <div style={{flex:1}}/>
+        <input className="search-box" placeholder="Search by name or ID…" value={search} onChange={e=>setSearch(e.target.value)} style={{width:220}}/>
+        <button className="btn">⬇ Export</button>
+        <button className="btn primary" onClick={onNew}>+ New Asset</button>
+      </div>
+
+      {/* TYPE FILTER BAR — fix 5 */}
+      <div className="type-filter-bar">
+        <button className={`type-btn${!typeFilter?' active':''}`} onClick={()=>{setTypeFilter('');setSubtypeFilter('');}}>
+          All <span className="count-badge">{totalCount}</span>
+        </button>
+        {ASSET_TYPES.map(t=>(
+          <button key={t} className={`type-btn${typeFilter===t?' active':''}`}
+            onClick={()=>{setTypeFilter(typeFilter===t?'':t);setSubtypeFilter('');}}>
+            {TYPE_META[t]?.icon} {t} <span className="count-badge">{typeCounts[t]||0}</span>
+          </button>
+        ))}
+      </div>
+
+      {typeFilter&&subtypes.length>0&&(
+        <div className="subtype-bar">
+          <span style={{fontSize:11,color:'var(--text-muted)',marginRight:4}}>Subtype:</span>
+          {subtypes.map(s=>(
+            <span key={s} className={`subtype-chip${subtypeFilter===s?' active':''}`}
+              onClick={()=>setSubtypeFilter(subtypeFilter===s?'':s)}>{s}</span>
+          ))}
+        </div>
+      )}
+
+      {/* KOQ 2 — A&V attribute value filter */}
+      {typeFilter&&enumAttrsForType.length>0&&(
+        <div className="attr-filter-row">
+          <span style={{fontSize:11,fontWeight:700,color:'var(--text-muted)',marginRight:4,whiteSpace:'nowrap'}}>
+            Filter by {ATTR_LABEL}:
+          </span>
+          {enumAttrsForType.map(a=>{
+            // collect distinct values from ASSET_ATTRS for this type
+            const vals=[...new Set(
+              ASSETS.flatMap(asset=>[asset,...(asset.children||[])])
+                .filter(asset=>asset.type===typeFilter)
+                .map(asset=>(ASSET_ATTRS[asset.id]||{})[a.key])
+                .filter(Boolean)
+            )];
+            if(!vals.length)return null;
+            return(
+              <select key={a.key} className="form-select" style={{fontSize:11,padding:'2px 6px',height:26,minWidth:0}}
+                value={attrFilters[a.key]||''}
+                onChange={e=>setAttrFilters(f=>({...f,[a.key]:e.target.value}))}>
+                <option value="">{a.label}: All</option>
+                {vals.map(v=><option key={v} value={v}>{v}</option>)}
+              </select>
+            );
+          })}
+          {Object.values(attrFilters).some(Boolean)&&(
+            <span className="filter-chip">
+              {Object.entries(attrFilters).filter(([,v])=>v).map(([k,v])=>{
+                const attr=enumAttrsForType.find(a=>a.key===k);
+                return(
+                  <span key={k} style={{display:'inline-flex',alignItems:'center',gap:3}}>
+                    {attr?.label}: <strong>{v}</strong>
+                    <span className="filter-chip-x" onClick={()=>setAttrFilters(f=>({...f,[k]:''}))}> ×</span>
+                  </span>
+                );
+              })}
+            </span>
+          )}
+          <span style={{fontSize:10,background:'rgba(0,212,212,.08)',color:'var(--accent-teal)',padding:'2px 7px',borderRadius:4,border:'1px solid rgba(0,212,212,.2)',whiteSpace:'nowrap',marginLeft:'auto'}}>
+            KOQ 2 — A&V bulk query
+          </span>
+        </div>
+      )}
+
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style={{width:'28%'}}>Asset Name</th>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th style={{minWidth:130}}>Condition Score</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(a=>(
+              <tr key={a.id} className={selectedId===a.id?'selected':''} onClick={()=>onSelect(a)}>
+                <td>
+                  <div style={{display:'flex',alignItems:'center',gap:5}}>
+                    {a.children&&a.children.length?(
+                      <button style={{width:16,height:16,border:'none',background:'transparent',color:'var(--text-muted)',fontSize:10,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}
+                        onClick={e=>{e.stopPropagation();toggle(a.id);}}>
+                        {expanded[a.id]?'▾':'▸'}
+                      </button>
+                    ):<span style={{width:16,display:'inline-block'}}/>}
+                    <span style={{marginLeft:a.depth*14,color:'var(--text-primary)',fontWeight:a.depth===0?500:400}}>{a.name}</span>
+                  </div>
+                </td>
+                <td style={{fontFamily:'monospace',fontSize:10,color:'var(--text-muted)'}}>{a.assetId}</td>
+                <td><TypePill type={a.type}/></td>
+                <td><StatusPill status={a.status}/></td>
+                <td><CondCell assetId={a.id}/></td>
+                <td style={{fontSize:11,color:'var(--text-muted)'}}>{a.location}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="pagination">
+        <span className="info">Showing {rows.length} assets{typeFilter?` · ${typeFilter}`:''}{subtypeFilter?` › ${subtypeFilter}`:''}</span>
+        <div className="page-btns">
+          <button className="page-btn">‹</button>
+          <button className="page-btn active">1</button>
+          <button className="page-btn">2</button>
+          <button className="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── WEIGHT EDITOR ─────────────────────────────────────────────────────────
+// vars: [{key,label}] — platform template definition (no weight here)
+// weights: {key: number} — tenant config, separate from variable definition
+// onWeightsChange: (newWeights) => void
+function WeightEditor({vars,weights,onWeightsChange,dimmed}){
+  const total=vars.reduce((s,v)=>s+(weights[v.key]||0),0);
+  const colors=CVAR_COLORS;
+  return(
+    <div className="weight-editor" style={dimmed?{opacity:.45,pointerEvents:'none'}:{}}>
+      {/* visual bar */}
+      <div className="we-bar">
+        {vars.map((v,i)=>{
+          const w=weights[v.key]||0;
+          return(
+            <div key={v.key} className="we-seg"
+              style={{flex:w||1,background:colors[i%colors.length],fontSize:10,color:'rgba(0,0,0,.8)'}}>
+              {w>8?`${w}%`:''}
+            </div>
+          );
+        })}
+      </div>
+      <div className="we-rows">
+        {vars.map((v,i)=>(
+          <div key={v.key} className="we-row">
+            <div className="we-dot" style={{background:colors[i%colors.length]}}/>
+            <span className="we-name">{v.label}</span>
+            <input className="we-input" type="number" min={0} max={100} value={weights[v.key]||0}
+              onChange={e=>{
+                const nw=Math.max(0,+e.target.value);
+                onWeightsChange({...weights,[v.key]:nw});
+              }}/>
+            <span className="we-pct">%</span>
+          </div>
+        ))}
+      </div>
+      {!dimmed&&<div className={`we-total ${total===100?'ok':'bad'}`}>
+        Total: {total}% {total!==100&&`— needs ${100-total>0?'+':''}${100-total}%`}
+      </div>}
+    </div>
+  );
+}
+
+// ── TEMPLATE DETAIL ────────────────────────────────────────────────────────
+function TemplateDetail({tmplKey,onBack,model,role}){
+  const orig=TEMPLATES[tmplKey];
+  const origCondCfg=TENANT_COND_CONFIG[tmplKey]||{wgtAvgEnabled:false,varWeights:{}};
+  const [attrs,setAttrs]=useState(orig?orig.attrs:[]);
+  const [vars]=useState(orig?orig.condVars:[]); // platform-defined, no tenant mutation
+  const [addAttr,setAddAttr]=useState(false);
+  const [reqVar,setReqVar]=useState(false);
+  const [saved,setSaved]=useState(false);
+  // wgtAvg defaults false per spec: "if no rule configured, condition_score independently editable"
+  const [wgtAvg,setWgtAvg]=useState(origCondCfg.wgtAvgEnabled);
+  // varWeights is tenant config — separate from platform variable definition
+  const [varWeights,setVarWeights]=useState(origCondCfg.varWeights);
+  const [renaming,setRenaming]=useState({});
+  const [removeAttr,setRemoveAttr]=useState(null); // guard modal target
+
+  const meta=TYPE_META[tmplKey]||{icon:'📋'};
+  const isReadOnly=model===1;
+  const isPlatformView=role&&role!=='tenant-admin';
+
+  function save(){setSaved(true);setTimeout(()=>setSaved(false),2000);}
+
+  return(
+    <div>
+      {/* CONTEXT NOTE — tenant customisation scope only */}
+      {!isReadOnly&&(
+        <div style={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'6px 12px',marginBottom:14,fontSize:11,color:'var(--text-muted)',display:'flex',alignItems:'center',gap:8}}>
+          <span>City of Riverside Council</span>
+          <span>·</span>
+          <span>Some fields are standard and cannot be edited</span>
+          <button className="btn ghost" style={{fontSize:10,marginLeft:'auto',padding:'2px 8px'}}>Reset to defaults</button>
+        </div>
+      )}
+
+      <div className="td-header">
+        <button className="back-btn" onClick={onBack}>← Templates</button>
+        <span style={{fontSize:24}}>{meta.icon}</span>
+        <div>
+          <div style={{fontWeight:700,fontSize:16,color:'var(--text-primary)'}}>{tmplKey}</div>
+          <div style={{fontSize:11,color:'var(--text-muted)'}}>{isReadOnly?'Classification Template · Read-only':'Classification Template'}</div>
+        </div>
+        {!isReadOnly&&(
+          <div style={{marginLeft:'auto',display:'flex',gap:8,alignItems:'center'}}>
+            {saved&&<span style={{fontSize:11,color:'var(--accent-green)'}}>✔ Saved</span>}
+            <button className="btn primary" onClick={save}>Save Changes</button>
+          </div>
+        )}
+      </div>
+
+      {/* ATTRIBUTES */}
+      <div style={{marginBottom:24}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+          <div style={{fontWeight:600,fontSize:13}}>Attributes <span style={{fontWeight:400,fontSize:12,color:'var(--text-muted)'}}>({attrs.length})</span></div>
+          {!isReadOnly&&<button className="btn" style={{fontSize:11}} onClick={()=>setAddAttr(true)}>+ Add Custom Attribute</button>}
+        </div>
+        <div className="attr-table">
+          <div className="attr-th" style={{gridTemplateColumns:'1fr 90px 70px 80px 130px'}}>
+            <span>Name</span><span>Type</span><span>Unit</span><span>Required</span><span>Source</span>
+          </div>
+          {attrs.map((a)=>{
+            const isRenaming=!isReadOnly&&renaming.hasOwnProperty(a.key);
+            return(
+              <div key={a.key} className="attr-tr" style={{gridTemplateColumns:'1fr 90px 70px 80px 130px'}}>
+                <div style={{display:'flex',flexDirection:'column',gap:2}}>
+                  {isRenaming?(
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      <input className="form-input" value={renaming[a.key]} onChange={e=>setRenaming(r=>({...r,[a.key]:e.target.value}))} style={{height:24,padding:'2px 6px',fontSize:12,width:160}}/>
+                      <button className="btn" style={{fontSize:10,padding:'2px 6px'}} onClick={()=>setRenaming(r=>{const n={...r};delete n[a.key];return n;})}>Done</button>
+                    </div>
+                  ):(
+                    <span style={{fontSize:12,color:'var(--text-primary)',display:'flex',alignItems:'center',gap:5}}>
+                      {renaming[a.key]!==undefined?renaming[a.key]:a.label}
+                      {a.custom&&<span className="custom-badge">Custom</span>}
+                      {renaming[a.key]!==undefined&&<span style={{fontSize:9,color:'var(--accent-orange)',fontStyle:'italic'}}>renamed</span>}
+                    </span>
+                  )}
+                  {isPlatformView&&<span className="canonical-key">{a.key}</span>}
+                </div>
+                <span><span className="type-badge">{a.type}</span></span>
+                <span style={{fontSize:11,color:'var(--text-muted)'}}>{a.unit||'—'}</span>
+                <span style={{fontSize:11}}>{a.required?<span style={{color:'var(--accent-green)'}}>✔ Yes</span>:<span style={{color:'var(--text-muted)'}}>Optional</span>}</span>
+                <span style={{display:'flex',gap:4,alignItems:'center',flexWrap:'wrap'}}>
+                  {isReadOnly?(
+                    <span style={{fontSize:9,background:'rgba(82,97,128,.15)',color:'var(--text-muted)',padding:'2px 5px',borderRadius:4,fontWeight:600}}>🔒 Read-only</span>
+                  ):a.custom?(
+                    <>
+                      {isPlatformView&&a.tenantCount?<span className="hot-badge">🔥 {a.tenantCount} tenants</span>:null}
+                      <button className="btn ghost" style={{fontSize:10,padding:'2px 6px'}} onClick={()=>setRemoveAttr(a)}>Remove</button>
+                    </>
+                  ):(
+                    <>
+                      <span style={{fontSize:9,background:'rgba(0,212,212,.1)',color:'var(--accent-teal)',padding:'2px 5px',borderRadius:4,fontWeight:600,whiteSpace:'nowrap'}}>🔒 Platform</span>
+                      {!isRenaming&&<button className="btn ghost" style={{fontSize:10,padding:'2px 6px'}} onClick={()=>setRenaming(r=>({...r,[a.key]:a.label}))}>Rename</button>}
+                    </>
+                  )}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{fontSize:11,color:'var(--text-muted)',marginTop:6,paddingLeft:4}}>
+          {isReadOnly?'🔒 Standard fields are read-only.':'🔒 Standard fields cannot be removed. You can rename them to match your organisation\'s terminology.'}
+        </div>
+      </div>
+
+      {/* CONDITION VARIABLES — two ownership zones */}
+      <div>
+        <div style={{fontWeight:600,fontSize:13,marginBottom:14}}>
+          Condition Variables <span style={{fontWeight:400,fontSize:12,color:'var(--text-muted)'}}>({vars.length})</span>
+          <span style={{marginLeft:8,fontSize:10,background:'rgba(0,212,212,.12)',color:'var(--accent-teal)',padding:'2px 7px',borderRadius:8,fontWeight:600}}>HC-9489</span>
+        </div>
+
+        {/* ── Zone A: Platform Definition — Brightly-owned, read-only for tenant ── */}
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:8,display:'flex',alignItems:'center',gap:6}}>
+            🔒 Standard Variables
+          </div>
+          <div style={{border:'1px solid var(--border)',borderRadius:'var(--radius)',overflow:'hidden'}}>
+            <div style={{display:'grid',gridTemplateColumns:isPlatformView?'1fr 140px 70px':'1fr 70px',padding:'5px 12px',background:'var(--bg-elevated)',borderBottom:'1px solid var(--border)',fontSize:10,fontWeight:600,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.4px'}}>
+              <span>Variable</span>{isPlatformView&&<span>Canonical Key</span>}<span>Scale</span>
+            </div>
+            {vars.map((v,i)=>(
+              <div key={v.key} style={{display:'grid',gridTemplateColumns:isPlatformView?'1fr 140px 70px':'1fr 70px',padding:'7px 12px',borderBottom:i<vars.length-1?'1px solid rgba(27,58,107,.35)':'none',fontSize:12,alignItems:'center'}}>
+                <span style={{color:'var(--text-primary)',fontWeight:500}}>{v.label}</span>
+                {isPlatformView&&<span style={{fontFamily:'monospace',fontSize:10,color:'var(--text-muted)'}}>{v.key}</span>}
+                <span style={{color:'var(--text-muted)',fontSize:11}}>{v.scale}</span>
+              </div>
+            ))}
+          </div>
+          {!isReadOnly&&(
+            <button className="btn ghost" style={{fontSize:10,marginTop:6}} onClick={()=>setReqVar(true)}>Request new variable →</button>
+          )}
+        </div>
+
+        {/* ── Zone B: Tenant Configuration — council-owned ── */}
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:8,display:'flex',alignItems:'center',gap:6}}>
+            {isReadOnly?'🔒 Condition Score Rule':'⚙️ Your Configuration'}
+            {!isReadOnly&&<span style={{fontWeight:400,textTransform:'none',letterSpacing:0,color:'var(--text-muted)',opacity:.7}}>— City of Riverside Council</span>}
+          </div>
+
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12,padding:'8px 12px',background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius)'}}>
+            <label style={{display:'flex',alignItems:'center',gap:8,cursor:isReadOnly?'default':'pointer',fontSize:12,color:'var(--text-secondary)',flex:1}}>
+              <input type="checkbox" checked={wgtAvg} disabled={isReadOnly} onChange={e=>setWgtAvg(e.target.checked)} style={{accentColor:'var(--accent-teal)'}}/>
+              <span>Derive <code style={{fontSize:11,background:'var(--bg-elevated)',padding:'1px 5px',borderRadius:3}}>condition_score</code> from <strong style={{color:wgtAvg?'var(--accent-teal)':'var(--text-muted)'}}>weighted average</strong> of variables</span>
+            </label>
+            {!wgtAvg&&!isReadOnly&&<span style={{fontSize:11,color:'var(--accent-orange)'}}>condition_score entered manually per survey</span>}
+          </div>
+
+          <WeightEditor vars={vars} weights={varWeights} onWeightsChange={isReadOnly||!wgtAvg?()=>{}:setVarWeights} dimmed={!wgtAvg}/>
+
+          <div style={{marginTop:8,padding:'8px 10px',background:'rgba(0,212,212,.06)',border:'1px solid rgba(0,212,212,.2)',borderRadius:'var(--radius)',fontSize:11,color:'var(--text-secondary)'}}>
+            {wgtAvg
+              ?'Weights determine how each variable contributes to condition_score — the value A&V uses for AASB 116 component depreciation.'
+              :'condition_score will be recorded manually during each survey. A&V will use this value directly for AASB 116 depreciation.'}
+          </div>
+        </div>
+      </div>
+
+      {/* ADD CUSTOM ATTR MODAL */}
+      {addAttr&&(
+        <div className="modal-backdrop">
+          <div className="modal modal-sm">
+            <div className="modal-header"><span className="modal-title">Add Custom Attribute</span><button className="btn ghost" onClick={()=>setAddAttr(false)}>✕</button></div>
+            <div className="modal-body">
+              <div style={{fontSize:11,color:'var(--text-secondary)',background:'rgba(0,212,212,.06)',padding:8,borderRadius:'var(--radius)',marginBottom:12,borderLeft:'3px solid var(--accent-teal)'}}>
+                Custom fields are visible to your organisation only.
+              </div>
+              <div className="form-row"><div className="form-label">Display Name <span className="req">*</span></div><input className="form-input" placeholder="e.g. Traffic Volume (AADT)"/></div>
+              <div className="form-2">
+                <div className="form-row"><div className="form-label">Data Type</div><select className="form-select"><option>Number</option><option>Text</option><option>Enum</option><option>Date</option><option>Boolean</option></select></div>
+                <div className="form-row"><div className="form-label">Unit</div><input className="form-input" placeholder="e.g. veh/day"/></div>
+              </div>
+              <div className="form-row"><label style={{display:'flex',alignItems:'center',gap:8,fontSize:12,color:'var(--text-secondary)',cursor:'pointer'}}><input type="checkbox"/> Required field</label></div>
+            </div>
+            <div className="modal-footer"><button className="btn" onClick={()=>setAddAttr(false)}>Cancel</button><button className="btn primary" onClick={()=>setAddAttr(false)}>Add</button></div>
+          </div>
+        </div>
+      )}
+
+      {/* REQUEST CONDITION VARIABLE MODAL — platform review required */}
+      {reqVar&&(
+        <div className="modal-backdrop">
+          <div className="modal modal-sm">
+            <div className="modal-header"><span className="modal-title">Request New Condition Variable</span><button className="btn ghost" onClick={()=>setReqVar(false)}>✕</button></div>
+            <div className="modal-body">
+              <div style={{fontSize:11,color:'var(--accent-orange)',background:'rgba(255,140,0,.08)',padding:8,borderRadius:'var(--radius)',marginBottom:12,borderLeft:'3px solid var(--accent-orange)'}}>
+                New condition variables require review before they can be activated.
+              </div>
+              <div className="form-row"><div className="form-label">Variable Name <span className="req">*</span></div><input className="form-input" placeholder="e.g. Skid Resistance"/></div>
+              <div className="form-2">
+                <div className="form-row"><div className="form-label">Scoring Scale</div><select className="form-select"><option>0–10</option><option>0–100</option><option>1–5</option></select></div>
+</div>
+              <div className="form-row"><div className="form-label">Justification</div><textarea className="form-input" rows={2} placeholder="Why is this variable needed for A&V at your council?"/></div>
+            </div>
+            <div className="modal-footer"><button className="btn" onClick={()=>setReqVar(false)}>Cancel</button><button className="btn primary" onClick={()=>setReqVar(false)}>Submit Request</button></div>
+          </div>
+        </div>
+      )}
+
+      {/* REMOVE ATTRIBUTE GUARD MODAL */}
+      {removeAttr&&(
+        <div className="modal-overlay" onClick={e=>{if(e.target.className==='modal-overlay')setRemoveAttr(null);}}>
+          <div className="modal" style={{maxWidth:440}}>
+            <div className="modal-header">
+              <span className="modal-title">⚠️ Remove Attribute — {removeAttr.label}</span>
+              <button className="modal-close" onClick={()=>setRemoveAttr(null)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="guard-warn">
+                <span style={{fontSize:18}}>⚠️</span>
+                <div>
+                  <div style={{fontWeight:600,marginBottom:4,color:'var(--accent-orange)'}}>
+                    Check A&V mapping rules before removing
+                  </div>
+                  <div>
+                    If an A&V mapping rule references <strong>{removeAttr.label}</strong>, removing it will break that rule — A&V will not be able to apply unit rates to assets of this type.
+                  </div>
+                </div>
+              </div>
+              <div style={{fontSize:12,color:'var(--text-secondary)',lineHeight:1.6}}>
+                <div style={{marginBottom:8}}><strong>What this does:</strong></div>
+                <ul style={{paddingLeft:16,margin:0}}>
+                  <li>Removes <strong>{removeAttr.label}</strong> from this tenant's view of the {tmplKey} template</li>
+                  <li>The field definition is preserved — it can be re-added at any time</li>
+                  <li>Existing asset records that already have a value for <strong>{removeAttr.label}</strong> are not affected</li>
+                </ul>
+              </div>
+              <div style={{marginTop:12,padding:'8px 10px',background:'rgba(82,97,128,.08)',borderRadius:'var(--radius)',fontSize:11,color:'var(--text-muted)'}}>
+                Confirm with your A&V team that no active mapping rule depends on this attribute before proceeding.
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn secondary" onClick={()=>setRemoveAttr(null)}>Cancel</button>
+              <button className="btn" style={{background:'rgba(240,78,78,.15)',color:'var(--accent-red)',border:'1px solid rgba(240,78,78,.4)'}}
+                onClick={()=>{setAttrs(attrs.filter(x=>x.key!==removeAttr.key));setRemoveAttr(null);}}>
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── DEMO PANEL ─────────────────────────────────────────────────────────────
+function DemoPanel({role,setRole,model,setModel}){
+  const [open,setOpen]=useState(false);
+  function hm(m){setModel(m);if(m!==3)setRole('tenant-admin');}
+  const tag=model===1?'M1':model===2?'M2':'M3';
+  const rtag=role==='platform-analyst'?' · PA':role==='platform-editor'?' · PE':'';
+  return(
+    <div className="demo-pill">
+      {open&&(
+        <div className="demo-card">
+          <div className="demo-section-label">Delivery Model</div>
+          {[{k:1,l:'Model 1',s:'V1 Baseline — Read-only'},{k:2,l:'Model 2',s:'CoS 5 — Tenant Customisation'},{k:3,l:'Model 3',s:'Full Governance Pipeline'}].map(m=>(
+            <div key={m.k} className={`demo-opt${model===m.k?' am':''}`} onClick={()=>hm(m.k)}>
+              <div className="dl">{m.l}</div><div className="ds">{m.s}</div>
+            </div>
+          ))}
+          {model===3&&<>
+            <div style={{height:1,background:'var(--border)',margin:'10px 0'}}/>
+            <div className="demo-section-label" style={{color:'var(--accent-purple)'}}>Platform Role</div>
+            {[
+              {k:'tenant-admin',l:'🏛️ Tenant Admin',s:'City of Riverside Council'},
+              {k:'platform-analyst',l:'🔭 Platform Analyst',s:'Read-only adoption data'},
+              {k:'platform-editor',l:'✏️ Platform Editor',s:'Promote & edit templates'},
+            ].map(r=>(
+              <div key={r.k} className={`demo-opt${role===r.k?' ar':''}`} onClick={()=>setRole(r.k)}>
+                <div className="dl">{r.l}</div><div className="ds">{r.s}</div>
+              </div>
+            ))}
+          </>}
+        </div>
+      )}
+      <div className="demo-toggle" onClick={()=>setOpen(o=>!o)}>
+        🎮 <span>Demo</span>
+        <span style={{fontSize:9,background:'var(--bg-elevated)',borderRadius:4,padding:'1px 5px'}}>{tag}{rtag}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── CLASSIFICATION TEMPLATES PAGE ─────────────────────────────────────────
+function ClassificationTemplates({model,setModel,role,initialSelected,onInitialSelectedConsumed}){
+  const [selected,setSelected]=useState(null);
+  const {useEffect}=React;
+  useEffect(()=>{
+    if(initialSelected){setSelected(initialSelected);onInitialSelectedConsumed&&onInitialSelectedConsumed();}
+  },[initialSelected]);
+  const [activated,setActivated]=useState({'Road Carriageway':true,'Bridge':true,'Building':true,'Stormwater Pipe':true,'Culvert':false,'Footpath':false});
+
+  const isReadOnly=model===1;
+
+  // Platform views — Model 3 only
+  if(model===3&&role==='platform-analyst'){
+    return <div className="settings-content"><PlatformAnalystView/></div>;
+  }
+  if(model===3&&role==='platform-editor'){
+    return <div className="settings-content"><PlatformEditorView onNavigateTemplate={k=>setSelected(k)}/></div>;
+  }
+
+  if(selected){
+    return <div className="settings-content"><TemplateDetail tmplKey={selected} onBack={()=>setSelected(null)} model={model} role={role}/></div>;
+  }
+
+  const tmplKeys=Object.keys(activated);
+
+  return(
+    <div className="settings-content">
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
+        <div className="settings-title" style={{marginBottom:0}}>Classification Templates</div>
+        <span style={{fontSize:10,flexShrink:0,background:model===1?'rgba(82,97,128,.15)':model===2?'rgba(0,212,212,.1)':'rgba(155,89,208,.12)',color:model===1?'var(--text-muted)':model===2?'var(--accent-teal)':'var(--accent-purple)',padding:'2px 8px',borderRadius:8,fontWeight:600}}>
+          {model===1?'Model 1 — Baseline':model===2?'Model 2 — CoS 5':'Model 3 — Governance'}
+        </span>
+        <span style={{fontSize:11,background:'rgba(0,212,212,.12)',color:'var(--accent-teal)',padding:'2px 8px',borderRadius:8,fontWeight:600}}>HC-9489</span>
+      </div>
+      {isReadOnly&&(
+        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,padding:'9px 13px',background:'rgba(82,97,128,.08)',border:'1px solid rgba(82,97,128,.25)',borderRadius:'var(--radius)',fontSize:12,color:'var(--text-secondary)'}}>
+          <span style={{fontSize:16}}>🔒</span>
+          <div>
+            <strong style={{color:'var(--text-primary)'}}>Platform-defined — Read only</strong>
+            <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>
+              All attribute and condition variable templates are set by Brightly platform. Tenant cannot add, rename, or remove fields in Model 1. Switch to Model 2 in the Demo panel to enable tenant customisation (CoS 5).
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="settings-sub">
+        {isReadOnly
+          ?'Platform-defined templates — same as Assetic V1 baseline. Read-only. Use Demo panel to switch models.'
+          :'Activate asset types your council uses and customise attributes for this tenant only.'
+        }
+      </div>
+
+      <div className="template-grid">
+        {tmplKeys.map(k=>{
+          const t=TEMPLATES[k];
+          const m=TYPE_META[k]||{icon:'📋'};
+          const isActive=isReadOnly?(t!=null):!!activated[k];
+          const subtypeStr=m.subtypes?m.subtypes.slice(0,2).join(' · ')+(m.subtypes.length>2?` +${m.subtypes.length-2}`:''):'All subtypes';
+          return(
+            <div key={k} className={`tc${isActive?' sel':''}`}
+              style={!isActive?{opacity:.65,borderStyle:'dashed',cursor:'default'}:{}}
+              onClick={()=>isActive&&setSelected(k)}>
+              <div className="tc-icon">{m.icon}</div>
+              <div className="tc-name">{k}</div>
+              <div className="tc-sub">{subtypeStr}</div>
+              {isActive
+                ?<div className="tc-counts">
+                    <span>{t?t.attrs.length:'—'}</span> attrs · <span>{t?t.condVars.length:'—'}</span> cond vars
+                    {isReadOnly&&<span style={{marginLeft:4,fontSize:10,color:'var(--text-muted)'}}>🔒</span>}
+                  </div>
+                :<button className="btn primary" style={{fontSize:11,marginTop:6}} onClick={e=>{e.stopPropagation();setActivated(a=>({...a,[k]:true}));}}>Activate</button>
+              }
+            </div>
+          );
+        })}
+        <div className="tc" style={{opacity:.3,cursor:'default',borderStyle:'dashed'}}>
+          <div className="tc-icon">➕</div>
+          <div className="tc-name" style={{color:'var(--text-muted)'}}>+5 more</div>
+          <div className="tc-sub" style={{fontStyle:'italic'}}>Coming soon</div>
+          <div className="tc-counts">—</div>
+        </div>
+      </div>
+
+      {/* TAXONOMY FEEDBACK — CoS 6, platform roles only */}
+      {role&&role!=='tenant-admin'&&<div className="feedback-banner" style={{marginTop:16,borderColor:'rgba(0,212,212,.25)',background:'rgba(0,212,212,.04)'}}>
+        <div className="fb-title" style={{color:'var(--accent-teal)'}}>
+          🔍 Taxonomy Selection Feedback — CoS 6
+          <span style={{fontSize:10,background:'rgba(0,212,212,.15)',color:'var(--accent-teal)',padding:'2px 7px',borderRadius:8,fontWeight:600}}>Passive · Anonymised</span>
+        </div>
+        <div className="fb-sub">What users searched and selected — used to improve taxonomy accuracy. Captured automatically on every classification selection.</div>
+        <table style={{width:'100%',borderCollapse:'collapse'}}>
+          <thead>
+            <tr>{['Search Query','Selected Type','Matched At','Count','Notes'].map(h=>(
+              <th key={h} style={{textAlign:'left',fontSize:10,color:'var(--text-muted)',padding:'4px 8px',borderBottom:'1px solid rgba(0,212,212,.15)',fontWeight:700,textTransform:'uppercase',letterSpacing:.4}}>{h}</th>
+            ))}</tr>
+          </thead>
+          <tbody>
+            {TAXONOMY_FEEDBACK_LOG.map((row,i)=>(
+              <tr key={i} style={{borderBottom:'1px solid var(--border)'}}>
+                <td style={{padding:'7px 8px',fontSize:12,fontFamily:'monospace',color:'var(--text-primary)'}}>"{row.query}"</td>
+                <td style={{padding:'7px 8px',fontSize:12,color:'var(--text-primary)',fontWeight:500}}>{row.selectedType||<span style={{color:'var(--text-muted)'}}>No match</span>}</td>
+                <td style={{padding:'7px 8px'}}>
+                  {row.matchedLevel
+                    ?<span style={{fontSize:10,fontWeight:700,padding:'2px 6px',borderRadius:4,
+                        background:row.matchedLevel==='type'?'rgba(0,200,100,.12)':'rgba(255,140,0,.12)',
+                        color:row.matchedLevel==='type'?'var(--accent-green)':'var(--accent-orange)'}}>
+                        {row.matchedLevel}
+                      </span>
+                    :<span style={{fontSize:10,color:'var(--accent-red)',fontWeight:600}}>no match</span>}
+                </td>
+                <td style={{padding:'7px 8px',fontSize:12}}>{row.count}×</td>
+                <td style={{padding:'7px 8px',fontSize:11,color:'var(--text-muted)',fontStyle:row.note?'normal':'italic'}}>{row.note||'—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{marginTop:8,fontSize:11,color:'var(--text-muted)'}}>
+          Selections matched at Group or Subgroup level (orange) indicate taxonomy gaps — users expected a more specific type. Contact platform to add missing asset types.
+        </div>
+      </div>}
+
+      {/* PASSIVE FEEDBACK — Model 2+ (CoS 6), platform roles only */}
+      {role&&role!=='tenant-admin'&&!isReadOnly&&(
+        <div className="feedback-banner">
+          <div className="fb-title">
+            📊 Passive Feedback — Custom Attribute Adoption
+            <span style={{fontSize:10,background:'rgba(255,140,0,.2)',color:'var(--accent-orange)',padding:'2px 7px',borderRadius:8,fontWeight:600}}>3+ tenants</span>
+          </div>
+          <div className="fb-sub">These custom attributes have been independently added by 3 or more tenants. Consider promoting to canonical template.{model===3&&' Platform Editors can promote via the governance pipeline.'}</div>
+          <table style={{width:'100%',borderCollapse:'collapse'}}>
+            <thead>
+              <tr>{['Attribute','Asset Type','Tenants','Action'].map(h=>(
+                <th key={h} style={{textAlign:'left',fontSize:10,color:'var(--text-muted)',padding:'4px 8px',borderBottom:'1px solid rgba(255,140,0,.2)',fontWeight:700,textTransform:'uppercase',letterSpacing:.4}}>{h}</th>
+              ))}</tr>
+            </thead>
+            <tbody>
+              {[
+                {attr:'Traffic Volume (AADT)',type:'Road Carriageway',count:4},
+                {attr:'Flood Overlay Zone',type:'Road Carriageway',count:3},
+                {attr:'Seismic Zone Classification',type:'Building',count:3},
+              ].map((row,i)=>(
+                <tr key={i}>
+                  <td style={{padding:'7px 8px',fontSize:12,color:'var(--text-primary)',fontWeight:500}}>{row.attr}</td>
+                  <td style={{padding:'7px 8px'}}><TypePill type={row.type}/></td>
+                  <td style={{padding:'7px 8px'}}><span className="hot-badge">🔥 {row.count} tenants</span></td>
+                  <td style={{padding:'7px 8px'}}>
+                    {model===3
+                      ?<span style={{fontSize:11,color:'var(--text-muted)'}}>Switch to Platform Editor role to promote</span>
+                      :<button className="btn" style={{fontSize:11,padding:'3px 10px'}}>Promote to Canonical</button>
+                    }
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── ASSET TYPEAHEAD ───────────────────────────────────────────────────────
+function AssetTypeahead({value,onChange}){
+  const [query,setQuery]=React.useState(value||'');
+  const [open,setOpen]=React.useState(false);
+  const [selection,setSelection]=React.useState(null);
+  const [cascade,setCascade]=React.useState(null);
+  const ref=React.useRef();
+  React.useEffect(()=>{
+    function h(e){if(ref.current&&!ref.current.contains(e.target))setOpen(false);}
+    document.addEventListener('mousedown',h);
+    return()=>document.removeEventListener('mousedown',h);
+  },[]);
+  function buildResults(q){
+    if(!q||q.length<1)return[];
+    const ql=q.toLowerCase();
+    const seen=new Set();
+    const results=[];
+    for(const item of TAXONOMY_FLAT){
+      const levels=[{level:'type',text:item.type},{level:'subgroup',text:item.subgroup},{level:'group',text:item.group},{level:'class',text:item.assetClass}];
+      for(const l of levels){
+        if(l.text.toLowerCase().includes(ql)){
+          const key=`${item.assetClass}|${item.group}|${item.subgroup}|${item.type}`;
+          if(!seen.has(key)){seen.add(key);results.push({...item,matchedLevel:l.level});}
+          break;
+        }
+      }
+    }
+    return results.slice(0,10);
+  }
+  function classesAvail(){return[...new Set(TAXONOMY_FLAT.map(i=>i.assetClass))];}
+  function groupsAvail(cls){return[...new Set(TAXONOMY_FLAT.filter(i=>i.assetClass===cls).map(i=>i.group))];}
+  function subgroupsAvail(cls,grp){return[...new Set(TAXONOMY_FLAT.filter(i=>i.assetClass===cls&&i.group===grp).map(i=>i.subgroup))];}
+  function typesAvail(cls,grp,sub){return TAXONOMY_FLAT.filter(i=>i.assetClass===cls&&i.group===grp&&i.subgroup===sub);}
+  function resolveAndFire(next){
+    const full=TAXONOMY_FLAT.find(i=>i.type===next.type&&i.assetClass===next.assetClass&&i.group===next.group&&i.subgroup===next.subgroup);
+    onChange(full?{...full,matchedLevel:next.matchedLevel}:null);
+  }
+  function updateCascade(level,val){
+    let next={...cascade};
+    if(level==='assetClass'){
+      next.assetClass=val;
+      next.group=groupsAvail(val)[0]||'';
+      next.subgroup=subgroupsAvail(val,next.group)[0]||'';
+      const t=typesAvail(val,next.group,next.subgroup)[0];
+      if(t){next.type=t.type;next.icon=t.icon;next.tmplKey=t.tmplKey;}
+    }else if(level==='group'){
+      next.group=val;
+      next.subgroup=subgroupsAvail(next.assetClass,val)[0]||'';
+      const t=typesAvail(next.assetClass,val,next.subgroup)[0];
+      if(t){next.type=t.type;next.icon=t.icon;next.tmplKey=t.tmplKey;}
+    }else if(level==='subgroup'){
+      next.subgroup=val;
+      const t=typesAvail(next.assetClass,next.group,val)[0];
+      if(t){next.type=t.type;next.icon=t.icon;next.tmplKey=t.tmplKey;}
+    }else if(level==='type'){
+      const t=TAXONOMY_FLAT.find(i=>i.type===val&&i.assetClass===next.assetClass&&i.group===next.group&&i.subgroup===next.subgroup);
+      if(t){next.type=t.type;next.icon=t.icon;next.tmplKey=t.tmplKey;}
+    }
+    setCascade(next);
+    setQuery(next.type);
+    resolveAndFire(next);
+  }
+  function select(item){
+    const c={...item,searchQuery:query};
+    setQuery(item.type);setSelection(item);setCascade(c);setOpen(false);onChange(item);
+  }
+  const overridden=cascade&&selection&&cascade.type!==selection.type;
+  const showFeedback=cascade&&(cascade.matchedLevel!=='type'||overridden);
+  const results=buildResults(query);
+  return(
+    React.createElement('div',{className:'ta-wrap',ref},
+      React.createElement('input',{className:'form-input',value:query,
+        onChange:e=>{setQuery(e.target.value);setOpen(true);setCascade(null);setSelection(null);onChange(null);},
+        onFocus:()=>setOpen(true),
+        placeholder:'Search: Road Carriageway, Bridge, Stormwater Pipe, Building…',
+        autoComplete:'off'}),
+      open&&query.length>0&&React.createElement('div',{className:'ta-results'},
+        results.length>0?results.map((item,i)=>
+          React.createElement('div',{key:i,className:'ta-item',onClick:()=>select(item)},
+            React.createElement('span',{className:'ta-icon'},item.icon),
+            React.createElement('div',{style:{flex:1,minWidth:0}},
+              React.createElement('div',{className:'ta-name'},item.type,!item.tmplKey&&React.createElement('span',{style:{fontSize:9,color:'var(--text-muted)',fontWeight:400}},' No template yet')),
+              React.createElement('div',{className:'ta-path'},
+                React.createElement('span',null,item.assetClass),
+                React.createElement('span',{className:'ta-sep'},'›'),
+                React.createElement('span',null,item.group),
+                React.createElement('span',{className:'ta-sep'},'›'),
+                React.createElement('span',null,item.subgroup),
+                item.matchedLevel!=='type'&&React.createElement('span',{className:'ta-level-badge'},'matched at '+item.matchedLevel)
+              )
+            )
+          )
+        ):React.createElement('div',{className:'ta-no-results'},'No match — try a broader term or contact platform to add this asset type.')
+      ),
+      cascade&&React.createElement('div',{className:'tax-cascade'},
+        React.createElement('div',null,
+          React.createElement('div',{className:'tax-lvl-label'},'Asset Class'),
+          React.createElement('select',{style:{width:'100%',background:'var(--bg-surface-2)',color:'var(--accent-teal)',border:'1px solid rgba(0,212,212,.25)',borderRadius:'var(--radius)',padding:'2px 4px',fontSize:11,fontWeight:500},value:cascade.assetClass,onChange:e=>updateCascade('assetClass',e.target.value)},
+            classesAvail().map(c=>React.createElement('option',{key:c,value:c},c)))
+        ),
+        React.createElement('div',null,
+          React.createElement('div',{className:'tax-lvl-label'},'Asset Group'),
+          React.createElement('select',{style:{width:'100%',background:'var(--bg-surface-2)',color:'var(--accent-teal)',border:'1px solid rgba(0,212,212,.25)',borderRadius:'var(--radius)',padding:'2px 4px',fontSize:11,fontWeight:500},value:cascade.group,onChange:e=>updateCascade('group',e.target.value)},
+            groupsAvail(cascade.assetClass).map(g=>React.createElement('option',{key:g,value:g},g)))
+        ),
+        React.createElement('div',null,
+          React.createElement('div',{className:'tax-lvl-label'},'Asset Subgroup'),
+          React.createElement('select',{style:{width:'100%',background:'var(--bg-surface-2)',color:'var(--accent-teal)',border:'1px solid rgba(0,212,212,.25)',borderRadius:'var(--radius)',padding:'2px 4px',fontSize:11,fontWeight:500},value:cascade.subgroup,onChange:e=>updateCascade('subgroup',e.target.value)},
+            subgroupsAvail(cascade.assetClass,cascade.group).map(s=>React.createElement('option',{key:s,value:s},s)))
+        ),
+        React.createElement('div',null,
+          React.createElement('div',{className:'tax-lvl-label'},'Asset Type'),
+          React.createElement('select',{style:{width:'100%',background:'var(--bg-surface-2)',color:'var(--accent-teal)',border:'1px solid rgba(0,212,212,.25)',borderRadius:'var(--radius)',padding:'2px 4px',fontSize:11,fontWeight:500},value:cascade.type,onChange:e=>updateCascade('type',e.target.value)},
+            typesAvail(cascade.assetClass,cascade.group,cascade.subgroup).map(t=>React.createElement('option',{key:t.type,value:t.type},t.type)))
+        )
+      ),
+      showFeedback&&React.createElement('div',{style:{marginTop:6,fontSize:10,color:'var(--text-muted)',background:'rgba(0,212,212,.05)',border:'1px solid rgba(0,212,212,.15)',borderRadius:'var(--radius)',padding:'5px 8px',display:'flex',gap:6,alignItems:'flex-start'}},
+        React.createElement('span',null,'📊'),
+        React.createElement('span',null,
+          `Searched "${cascade.searchQuery}" — matched at ${cascade.matchedLevel} level`,
+          overridden?` · corrected to "${cascade.type}"`:null,
+          ' — recorded for taxonomy feedback.'
+        )
+      )
+    )
+  );
+}
+
+// ── SURVEY FORM ───────────────────────────────────────────────────────────
+function SurveyForm({asset,onClose}){
+  const tmpl=TEMPLATES[asset.type];
+  const condCfg=TENANT_COND_CONFIG[asset.type]||{wgtAvgEnabled:false,varWeights:{}};
+  const existing=ASSET_CONDITIONS[asset.id];
+  const [defaultDate,setDefaultDate]=React.useState(new Date().toISOString().slice(0,10));
+  const [surveyor,setSurveyor]=React.useState('');
+  // condition_score for manual entry (only used when wgtAvgEnabled=false)
+  const [manualScore,setManualScore]=React.useState(
+    existing?existing.overall.toString():''
+  );
+  const [vars,setVars]=React.useState(()=>{
+    if(!tmpl)return[];
+    return tmpl.condVars.map(c=>{  // fixed: was tmpl.conditions (crash)
+      const ex=existing&&existing.vars.find(v=>v.key===c.key);
+      // observation only: score + assessDate — no weight in survey record
+      return{key:c.key,label:c.label,score:ex?ex.score:5,assessDate:ex?ex.surveyDate:new Date().toISOString().slice(0,10),override:false};
+    });
+  });
+  function setVar(i,field,val){setVars(prev=>{const n=[...prev];n[i]={...n[i],[field]:val};return n;});}
+
+  // weighted avg — only computed when tenant has configured it
+  const weightedAvg=condCfg.wgtAvgEnabled?(()=>{
+    const totalW=Object.values(condCfg.varWeights).reduce((s,w)=>s+w,0);
+    if(!totalW)return null;
+    const sum=vars.reduce((s,v)=>s+(v.score*(condCfg.varWeights[v.key]||0)),0);
+    return(sum/totalW).toFixed(1);
+  })():null;
+
+  return(
+    React.createElement('div',{className:'modal-overlay',onClick:e=>{if(e.target.className==='modal-overlay')onClose();}},
+      React.createElement('div',{className:'modal',style:{maxWidth:580,maxHeight:'90vh',overflowY:'auto'}},
+        React.createElement('div',{className:'modal-header'},
+          React.createElement('span',{className:'modal-title'},'📋 Record Condition Survey — '+asset.name),
+          React.createElement('button',{className:'modal-close',onClick:onClose},'×')
+        ),
+        React.createElement('div',{className:'modal-body'},
+          React.createElement('div',{className:'form-grid',style:{gridTemplateColumns:'1fr 1fr',marginBottom:16}},
+            React.createElement('div',{className:'form-group'},
+              React.createElement('label',{className:'form-label'},'Default Survey Date'),
+              React.createElement('input',{className:'form-input',type:'date',value:defaultDate,
+                onChange:e=>{setDefaultDate(e.target.value);setVars(prev=>prev.map(v=>v.override?v:{...v,assessDate:e.target.value}));}})
+            ),
+            React.createElement('div',{className:'form-group'},
+              React.createElement('label',{className:'form-label'},'Surveyor / Organisation'),
+              React.createElement('input',{className:'form-input',value:surveyor,onChange:e=>setSurveyor(e.target.value),placeholder:'e.g. Pavement Solutions Pty'})
+            )
+          ),
+          React.createElement('div',{style:{fontSize:11,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}},'Condition Variables'),
+          vars.map((v,i)=>
+            React.createElement('div',{key:v.key,className:'svar-row'},
+              React.createElement('div',{className:'svar-header'},
+                React.createElement('div',{className:'svar-name'},v.label),
+                React.createElement('span',{className:'svar-score-big',style:{color:v.score>=7?'var(--accent-green)':v.score>=5?'var(--accent-orange)':'var(--accent-red)'}},v.score.toFixed(1))
+              ),
+              React.createElement('input',{type:'range',min:0,max:10,step:0.1,value:v.score,
+                style:{width:'100%',accentColor:'var(--accent-teal)',marginBottom:8},
+                onChange:e=>setVar(i,'score',parseFloat(e.target.value))}),
+              React.createElement('div',{className:'svar-meta-grid'},
+                React.createElement('div',{className:'form-group',style:{margin:0}},
+                  React.createElement('label',{className:'form-label',style:{display:'flex',alignItems:'center',gap:6}},
+                    'Assessment Date',
+                    v.override&&React.createElement('span',{style:{fontSize:9,background:'rgba(255,140,0,.2)',color:'var(--accent-orange)',padding:'1px 5px',borderRadius:4}},'custom')
+                  ),
+                  React.createElement('input',{className:'form-input',type:'date',value:v.assessDate,
+                    onChange:e=>setVar(i,'assessDate',e.target.value)||setVar(i,'override',true)})
+                ),
+                React.createElement('div',{className:'form-group',style:{margin:0}},
+                  React.createElement('label',{className:'form-label'},'Notes (optional)'),
+                  React.createElement('input',{className:'form-input',placeholder:'Observation…'})
+                )
+              )
+            )
+          ),
+          // condition_score section — shown below variables, differs by tenant config
+          React.createElement('div',{style:{marginTop:16,padding:'10px 12px',background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius)'}},
+            condCfg.wgtAvgEnabled
+              ? React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between'}},
+                  React.createElement('div',null,
+                    React.createElement('div',{style:{fontSize:11,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.5}},'condition_score'),
+                    React.createElement('div',{style:{fontSize:10,color:'var(--text-muted)',marginTop:2}},'Auto-computed · tenant weighted average')
+                  ),
+                  React.createElement('span',{style:{fontSize:22,fontWeight:800,color:'var(--accent-teal)'}},weightedAvg+' / 10')
+                )
+              : React.createElement('div',null,
+                  React.createElement('div',{style:{fontSize:11,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.5,marginBottom:6}},'condition_score (optional)'),
+                  React.createElement('div',{style:{fontSize:10,color:'var(--text-muted)',marginBottom:8}},'No weighted average configured for this asset type. Enter a summary score manually, or leave blank.'),
+                  React.createElement('div',{style:{display:'flex',alignItems:'center',gap:10}},
+                    React.createElement('input',{className:'form-input',type:'number',min:0,max:10,step:0.1,
+                      value:manualScore,onChange:e=>setManualScore(e.target.value),
+                      placeholder:'0.0 – 10.0',style:{width:100}}),
+                    React.createElement('span',{style:{fontSize:11,color:'var(--text-muted)'}},'/10')
+                  )
+                )
+          ),
+          React.createElement('div',{className:'success-notice',style:{marginTop:12}},
+            React.createElement('span',null,'ℹ️'),
+            React.createElement('span',null,'Each variable records its own assessment date. Dates override the default when surveys are staggered across different inspection events.')
+          )
+        ),
+        React.createElement('div',{className:'modal-footer'},
+          React.createElement('button',{className:'btn secondary',onClick:onClose},'Cancel'),
+          React.createElement('button',{className:'btn primary',onClick:()=>{
+            alert('Survey saved — '+vars.length+' condition variables recorded for '+asset.name+' (prototype: data not persisted)');
+            onClose();
+          }},'Save Survey')
+        )
+      )
+    )
+  );
+}
+
+// ── ASSET FORM MODAL ──────────────────────────────────────────────────────
+function AssetForm({onClose}){
+  const [form,setForm]=useState({name:'',assetId:'',type:'',subtype:'',taxonomy:null,location:'',manufacturer:'',purchaseCost:'',replacementCost:'',installDate:'',designLife:30});
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const tmpl=form.type?TEMPLATES[form.type]:null;
+  const subtypes=form.type?(TYPE_META[form.type]?.subtypes||[]):[];
+
+  return(
+    <div className="modal-backdrop">
+      <div className="modal">
+        <div className="modal-header">
+          <span className="modal-title">New Asset</span>
+          <button className="btn ghost" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          <div className="photo-ph">📷 Upload asset photo</div>
+
+          <div className="form-section-label">Basic Info</div>
+          <div className="form-2">
+            <div className="form-row"><div className="form-label">Name <span className="req">*</span></div><input className="form-input" value={form.name} onChange={e=>set('name',e.target.value)} placeholder="e.g. Queens Road — North"/></div>
+            <div className="form-row"><div className="form-label">Asset ID <span className="req">*</span></div><input className="form-input" value={form.assetId} onChange={e=>set('assetId',e.target.value)} placeholder="e.g. RD-003"/></div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-label">Asset Type <span className="req">*</span></div>
+            <AssetTypeahead value={form.type} onChange={item=>{
+              if(item){
+                set('taxonomy',item);
+                set('type',item.tmplKey||item.type);
+                set('subtype',TYPE_META[item.tmplKey||item.type]?.subtypes[0]||'');
+              }else{
+                set('taxonomy',null);set('type','');set('subtype','');
+              }
+            }}/>
+            {form.taxonomy&&tmpl&&(
+              <div style={{marginTop:6,fontSize:11,color:'var(--accent-teal)',display:'flex',alignItems:'center',gap:6}}>
+                ✔ Template matched: <strong>{form.type}</strong> · {tmpl.attrs.length} {ATTR_LABEL.toLowerCase()}, {tmpl.condVars.length} condition variables
+              </div>
+            )}
+            {form.taxonomy&&!tmpl&&(
+              <div style={{marginTop:6,fontSize:11,color:'var(--accent-orange)',display:'flex',alignItems:'center',gap:6}}>
+                ⚠ No template yet for this asset type — baseline fields only (Install Date, Quantity, Unit of Measure)
+              </div>
+            )}
+          </div>
+
+          {form.type&&subtypes.length>0&&(
+            <div className="form-row">
+              <div className="form-label">Subtype</div>
+              <select className="form-select" value={form.subtype} onChange={e=>set('subtype',e.target.value)}>
+                {subtypes.map(s=><option key={s}>{s}</option>)}
+              </select>
+            </div>
+          )}
+
+          <div className="form-2">
+            <div className="form-row"><div className="form-label">Location</div><select className="form-select" value={form.location} onChange={e=>set('location',e.target.value)}><option value="">Select…</option><option>Ward 1 — North Riverside</option><option>Ward 2 — Central</option><option>Ward 3 — Industrial</option><option>Ward 4 — Rural Fringe</option><option>Civic Precinct</option></select></div>
+            <div className="form-row"><div className="form-label">Manufacturer / Owner</div><input className="form-input" value={form.manufacturer} onChange={e=>set('manufacturer',e.target.value)} placeholder="e.g. Council DRW"/></div>
+          </div>
+
+          {/* ATTRIBUTES from template */}
+          {tmpl&&(
+            <>
+              <div className="form-section-label" style={{display:'flex',alignItems:'center',gap:8}}>
+                {TYPE_META[form.type]?.icon} {ATTR_LABEL} — {form.type} Template
+              </div>
+              <div className="form-2">
+                {tmpl.attrs.filter(a=>a.type==='Number').map(a=>(
+                  <div key={a.key} className="form-row">
+                    <div className="form-label">{a.label}{a.required&&<span className="req"> *</span>} {a.unit&&<span style={{textTransform:'none',letterSpacing:0,color:'var(--text-muted)',fontWeight:400}}>({a.unit})</span>}</div>
+                    <input className="form-input" type="number" placeholder={`Enter value`}/>
+                  </div>
+                ))}
+              </div>
+              {tmpl.attrs.filter(a=>a.type==='Enum').map(a=>(
+                <div key={a.key} className="form-row">
+                  <div className="form-label">{a.label}{a.required&&<span className="req"> *</span>}</div>
+                  <select className="form-select"><option value="">Select…</option>{(a.options||[]).map(o=><option key={o}>{o}</option>)}</select>
+                </div>
+              ))}
+            </>
+          )}
+
+          <div className="form-section-label">Financial & Lifecycle</div>
+          <div className="form-2">
+            <div className="form-row"><div className="form-label">Purchase Cost</div><input className="form-input" value={form.purchaseCost} onChange={e=>set('purchaseCost',e.target.value)} placeholder="$0.00"/></div>
+            <div className="form-row"><div className="form-label">Replacement Cost</div><input className="form-input" value={form.replacementCost} onChange={e=>set('replacementCost',e.target.value)} placeholder="$0.00"/></div>
+          </div>
+          <div className="form-2">
+            <div className="form-row"><div className="form-label">Install Date</div><input className="form-input" type="date" value={form.installDate} onChange={e=>set('installDate',e.target.value)}/></div>
+            <div className="form-row"><div className="form-label">Design Life: {form.designLife} yrs</div><input className="slider" type="range" min={5} max={100} value={form.designLife} onChange={e=>set('designLife',+e.target.value)}/></div>
+          </div>
+        </div>
+        <div className="modal-footer">
+          <button className="btn" onClick={onClose}>Cancel</button>
+          <button className="btn primary" onClick={onClose}>Save Asset</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── MANAGE USERS ──────────────────────────────────────────────────────────
+function ManageUsers(){
+  return(
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      <div className="table-toolbar"><span className="title">Users</span><div style={{flex:1}}/><button className="btn primary">+ Invite User</button></div>
+      <div style={{flex:1,overflow:'auto'}}>
+        <table className="manage-table">
+          <thead><tr>{['Name','Email','Role','Status','Rate',''].map(h=><th key={h} className="manage-th">{h}</th>)}</tr></thead>
+          <tbody>
+            {USERS.map(u=>(
+              <tr key={u.id}>
+                <td className="manage-td" style={{color:'var(--text-primary)',fontWeight:500}}>{u.name}</td>
+                <td className="manage-td" style={{fontFamily:'monospace',fontSize:11}}>{u.email}</td>
+                <td className="manage-td"><span style={{fontSize:11,background:'var(--bg-elevated)',color:'var(--text-secondary)',padding:'2px 7px',borderRadius:4}}>{u.role}</span></td>
+                <td className="manage-td"><StatusPill status={u.status}/></td>
+                <td className="manage-td">{u.rate}</td>
+                <td className="manage-td"><button className="btn ghost" style={{fontSize:11}}>Edit</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ── MANAGE LOCATIONS ──────────────────────────────────────────────────────
+function LocNode({node,depth=0}){
+  const [open,setOpen]=useState(depth<2);
+  const [editing,setEditing]=useState(false);
+  const [name,setName]=useState(node.name);
+  const has=node.children&&node.children.length>0;
+  const icons={Organisation:'🏢',Ward:'🗺️',Precinct:'📍',Segment:'📌'};
+  return(
+    <div>
+      <div style={{display:'flex',alignItems:'center',gap:6,padding:'5px 0',paddingLeft:depth*20,borderBottom:'1px solid rgba(27,58,107,.4)'}}>
+        {has?<button style={{width:16,height:16,border:'none',background:'transparent',color:'var(--text-muted)',fontSize:10,cursor:'pointer'}} onClick={()=>setOpen(o=>!o)}>{open?'▾':'▸'}</button>:<span style={{width:16}}/>}
+        <span style={{flexShrink:0}}>{icons[node.type]||'📌'}</span>
+        {editing?<input className="form-input" value={name} onChange={e=>setName(e.target.value)} style={{height:24,padding:'2px 6px',fontSize:12,width:200}}/>
+        :<span style={{fontSize:12,color:'var(--text-primary)',flex:1}}>{name}</span>}
+        <span style={{fontSize:11,color:'var(--text-muted)',marginRight:8}}>{node.type}</span>
+        {editing?<button className="btn" style={{fontSize:11,padding:'2px 8px'}} onClick={()=>setEditing(false)}>Save</button>
+        :<button className="btn ghost" style={{fontSize:11}} onClick={()=>setEditing(true)}>✏️</button>}
+        <button className="btn ghost" style={{fontSize:11}}>+</button>
+      </div>
+      {open&&has&&node.children.map(c=><LocNode key={c.id} node={c} depth={depth+1}/>)}
+    </div>
+  );
+}
+function ManageLocations(){
+  return(
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      <div className="table-toolbar"><span className="title">Locations</span><div style={{flex:1}}/><button className="btn primary">+ Add Location</button></div>
+      <div style={{flex:1,overflow:'auto',padding:'0 16px'}}>{LOCATIONS.map(l=><LocNode key={l.id} node={l}/>)}</div>
+    </div>
+  );
+}
+
+// ── CROSS-TENANT ADOPTION DATA ────────────────────────────────────────────
+const CROSS_TENANT_ATTRS=[
+  {attr:'Traffic Volume (AADT)',type:'Road Carriageway',count:4,dataTypes:['Number','Integer'],firstAdded:'12 days ago',stage:'candidate',
+   tenantDefs:[
+     {tenant:'City of Riverside Council',label:'Traffic Volume',type:'Number',unit:'AADT count'},
+     {tenant:'Shire of Bluegum',label:'Annual Average Daily Traffic',type:'Number',unit:'vehicles/day'},
+     {tenant:'Port City Council',label:'AADT',type:'Number',unit:'vehicles/day'},
+     {tenant:'Inland Local Government',label:'Traffic Count (AADT)',type:'Integer',unit:''},
+   ]},
+  {attr:'Flood Overlay Zone',type:'Road Carriageway',count:3,dataTypes:['Boolean','Enum'],firstAdded:'22 days ago',stage:'candidate',
+   tenantDefs:[
+     {tenant:'City of Riverside Council',label:'Flood Overlay',type:'Boolean',unit:''},
+     {tenant:'Shire of Bluegum',label:'Flood Risk Zone',type:'Enum',unit:'Low / Medium / High'},
+     {tenant:'Port City Council',label:'Flood Overlay Zone',type:'Enum',unit:'FO1 / FO2 / FO3'},
+   ]},
+  {attr:'Seismic Zone Classification',type:'Building',count:3,dataTypes:['Enum'],firstAdded:'8 days ago',stage:'candidate',
+   tenantDefs:[
+     {tenant:'City of Riverside Council',label:'Seismic Zone',type:'Enum',unit:'A/B/C/D/E'},
+     {tenant:'Port City Council',label:'Seismic Zone Classification',type:'Enum',unit:'AS 1170.4 Zone'},
+     {tenant:'Inland Local Government',label:'Earthquake Zone',type:'Enum',unit:'Low / Med / High'},
+   ]},
+  {attr:'Heritage Overlay',type:'Building',count:2,dataTypes:['Boolean'],firstAdded:'45 days ago',stage:'draft',tenantDefs:[]},
+  {attr:'Stormwater Capacity',type:'Stormwater Pipe',count:2,dataTypes:['Number'],firstAdded:'30 days ago',stage:'draft',tenantDefs:[]},
+  {attr:'Tree Root Intrusion',type:'Stormwater Pipe',count:1,dataTypes:['Enum'],firstAdded:'5 days ago',stage:'shadow',tenantDefs:[]},
+  {attr:'Lane Marking Condition',type:'Road Carriageway',count:1,dataTypes:['Enum'],firstAdded:'3 days ago',stage:'shadow',tenantDefs:[]},
+];
+
+// RoleSwitcher removed — replaced by DemoPanel floating overlay
+
+// ── PLATFORM ANALYST VIEW ─────────────────────────────────────────────────
+function PlatformAnalystView(){
+  const stageCounts={
+    shadow:CROSS_TENANT_ATTRS.filter(a=>a.stage==='shadow').length,
+    draft:CROSS_TENANT_ATTRS.filter(a=>a.stage==='draft').length,
+    candidate:CROSS_TENANT_ATTRS.filter(a=>a.stage==='candidate').length,
+  };
+  return(
+    <div className="settings-content">
+      <div className="settings-title">Platform Template Governance</div>
+      <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:20,display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+        Passive adoption feedback from 143 tenants. No PII. Anonymous cross-tenant signal only.
+        <span style={{fontSize:11,background:'rgba(155,89,208,.15)',color:'var(--accent-purple)',padding:'2px 8px',borderRadius:8,fontWeight:600}}>Read-only · Analyst</span>
+      </div>
+
+      <div className="pipeline-stages">
+        {[
+          {key:'shadow-s',label:'Shadow',count:stageCounts.shadow,desc:'1 tenant only — too early to act'},
+          {key:'draft-s',label:'Draft',count:stageCounts.draft,desc:'2 tenants — watch for growth'},
+          {key:'candidate-s',label:'Candidate',count:stageCounts.candidate,desc:'3+ tenants — ready for review'},
+          {key:'promoted-s',label:'Promoted (30d)',count:5,desc:'Added to canonical templates'},
+        ].map(s=>(
+          <div key={s.key} className="pipeline-stage">
+            <div className="ps-count">{s.count}</div>
+            <div className={`ps-label ${s.key}`}>{s.label}</div>
+            <div className="ps-desc">{s.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden'}}>
+        <div style={{padding:'10px 14px 8px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <span style={{fontSize:12,fontWeight:600,color:'var(--text-primary)'}}>Custom Attribute Adoption</span>
+          <span style={{fontSize:11,color:'var(--text-muted)'}}>Threshold for promotion: 3+ tenants</span>
+        </div>
+        <div className="adoption-th-row adoption-cols">
+          {['Attribute','Asset Type','Tenants','Data Types','First Added','Stage'].map(h=>(
+            <span key={h}>{h}</span>
+          ))}
+        </div>
+        {CROSS_TENANT_ATTRS.map((row,i)=>(
+          <div key={i} className="adoption-table-row adoption-cols">
+            <span style={{fontWeight:500,color:'var(--text-primary)'}}>{row.attr}</span>
+            <TypePill type={row.type}/>
+            <span style={{display:'flex',alignItems:'center',gap:4}}>
+              {row.count>=3&&<span style={{color:'var(--accent-orange)'}}>🔥</span>}
+              <span style={{fontWeight:row.count>=3?700:400,color:row.count>=3?'var(--accent-orange)':'var(--text-secondary)'}}>
+                {row.count} {row.count===1?'tenant':'tenants'}
+              </span>
+            </span>
+            <span style={{fontSize:11,color:'var(--text-secondary)'}}>{row.dataTypes.join(' / ')}</span>
+            <span style={{fontSize:11,color:'var(--text-muted)'}}>{row.firstAdded}</span>
+            <span className={`stage-chip ${row.stage}`}>{row.stage.charAt(0).toUpperCase()+row.stage.slice(1)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── PLATFORM EDITOR VIEW ──────────────────────────────────────────────────
+function PlatformEditorView({onNavigateTemplate}){
+  const candidates=CROSS_TENANT_ATTRS.filter(a=>a.stage==='candidate'&&a.tenantDefs.length>0);
+  const [dismissed,setDismissed]=useState([]);
+  const [promoted,setPromoted]=useState([]);
+  const [editLabels,setEditLabels]=useState({});
+  const [editTypes,setEditTypes]=useState({});
+  const active=candidates.filter(c=>!dismissed.includes(c.attr)&&!promoted.includes(c.attr));
+
+  return(
+    <div className="settings-content">
+      <div className="settings-title">Platform Template Editor</div>
+      <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:20,display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+        Manage canonical attribute definitions. Changes propagate to all tenants on next sync.
+        <span style={{fontSize:11,background:'rgba(155,89,208,.15)',color:'var(--accent-purple)',padding:'2px 8px',borderRadius:8,fontWeight:600}}>Full access · Editor</span>
+      </div>
+
+      {promoted.length>0&&(
+        <div className="success-notice">
+          ✅ Promoted: <strong>{promoted.join(', ')}</strong> — added to canonical templates. All tenants will inherit on next sync.
+        </div>
+      )}
+
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+        <span style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Promotion Queue</span>
+        {active.length>0&&<span style={{fontSize:11,background:'rgba(255,140,0,.2)',color:'var(--accent-orange)',padding:'2px 8px',borderRadius:8,fontWeight:600}}>{active.length} pending</span>}
+      </div>
+
+      {active.length===0&&!promoted.length&&(
+        <div className="success-notice" style={{marginBottom:20}}>✅ All candidates reviewed. Canonical templates are up to date.</div>
+      )}
+
+      {active.map(c=>{
+        const canonLabel=editLabels[c.attr]!==undefined?editLabels[c.attr]:c.attr;
+        const canonType=editTypes[c.attr]||c.dataTypes[0];
+        const canonKey=c.attr.toLowerCase().replace(/[\s()\/]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+        return(
+          <div key={c.attr} className="promotion-card">
+            <div className="promo-header">
+              <div style={{flex:1}}>
+                <div className="promo-name">{c.attr}</div>
+                <div className="promo-meta">
+                  <TypePill type={c.type}/>
+                  <span className="hot-badge">🔥 {c.count} tenants</span>
+                  independently defined this attribute
+                </div>
+              </div>
+              <span className="stage-chip candidate">Candidate</span>
+            </div>
+
+            <div style={{fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.4,marginBottom:6}}>
+              How tenants defined it — spot inconsistencies before promoting
+            </div>
+            <div className="tenant-defs">
+              <div style={{display:'grid',gridTemplateColumns:'160px 1fr 70px 100px',gap:8,padding:'3px 0 5px',borderBottom:'1px solid rgba(27,58,107,.5)',fontSize:9,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.4}}>
+                <span>Tenant</span><span>Label used</span><span>Type</span><span>Unit / Values</span>
+              </div>
+              {c.tenantDefs.map((d,i)=>(
+                <div key={i} className="tenant-def-row">
+                  <span style={{color:'var(--text-muted)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{d.tenant}</span>
+                  <span style={{color:'var(--text-primary)',fontWeight:500}}>"{d.label}"</span>
+                  <span className="type-badge">{d.type}</span>
+                  <span style={{fontSize:10,color:'var(--text-muted)'}}>{d.unit||'—'}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.4,marginBottom:8}}>
+              Define canonical — this becomes the single source of truth
+            </div>
+            <div className="canonical-form">
+              <div>
+                <div className="form-label">Display Label <span style={{color:'var(--accent-teal)',fontWeight:400,textTransform:'none'}}>(tenant-facing)</span></div>
+                <input className="form-input" value={canonLabel}
+                  onChange={e=>setEditLabels(l=>({...l,[c.attr]:e.target.value}))}/>
+              </div>
+              <div>
+                <div className="form-label">Data Type</div>
+                <select className="form-select" value={canonType}
+                  onChange={e=>setEditTypes(t=>({...t,[c.attr]:e.target.value}))}>
+                  {['Number','Integer','Text','Enum','Boolean','Date'].map(t=><option key={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <div className="form-label">Canonical Key <span style={{color:'var(--text-muted)',fontWeight:400,textTransform:'none'}}>(immutable)</span></div>
+                <input className="form-input" readOnly value={canonKey}
+                  style={{fontFamily:'monospace',fontSize:11,color:'var(--text-muted)',background:'var(--bg-surface)'}}/>
+              </div>
+            </div>
+            <div style={{fontSize:11,color:'var(--accent-yellow)',marginBottom:12,display:'flex',alignItems:'center',gap:6}}>
+              ⚠️ Existing tenant custom attrs matching this key will be auto-migrated on promotion.
+              {c.dataTypes.length>1&&<span style={{color:'var(--accent-orange)'}}> Type mismatch ({c.dataTypes.join('/')}) — verify before promoting.</span>}
+            </div>
+
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button className="btn danger" style={{fontSize:11}} onClick={()=>setDismissed(d=>[...d,c.attr])}>Dismiss</button>
+              <button className="btn primary" style={{fontSize:11}} onClick={()=>setPromoted(p=>[...p,c.attr])}>✓ Promote to Canonical</button>
+            </div>
+          </div>
+        );
+      })}
+
+      <div style={{height:1,background:'var(--border)',margin:'4px 0 18px'}}/>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+        <span style={{fontSize:13,fontWeight:700,color:'var(--text-primary)'}}>Canonical Templates</span>
+        <span style={{fontSize:11,color:'var(--text-muted)'}}>Click a template to edit its attribute set</span>
+      </div>
+      <div className="template-grid">
+        {Object.keys(TEMPLATES).map(k=>{
+          const m=TYPE_META[k]||{icon:'📋'};
+          const t=TEMPLATES[k];
+          return(
+            <div key={k} className="tc" onClick={()=>onNavigateTemplate(k)}>
+              <div className="tc-icon">{m.icon}</div>
+              <div className="tc-name">{k}</div>
+              <div className="tc-sub">{m.subtypes?m.subtypes.slice(0,2).join(' · ')+(m.subtypes.length>2?` +${m.subtypes.length-2}`:''):'—'}</div>
+              <div className="tc-counts"><span>{t.attrs.length}</span> attrs · <span>{t.condVars.length}</span> cond vars</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+function SettingsPage({settingsPage,setSettingsPage,role,model,setModel,templateTarget,onTemplateTargetConsumed}){
+  const nav=[
+    {k:'general',icon:'🏢',label:'General'},
+    {k:'users',icon:'👥',label:'Users & Roles'},
+    {k:'locations',icon:'📍',label:'Locations'},
+    {k:'templates',icon:'📐',label:'Classification Templates'},
+  ];
+  return(
+    <div className="settings-layout">
+      <div className="settings-sidebar">
+        <div style={{padding:'10px 16px 6px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.5}}>Settings</div>
+        {nav.map(item=>(
+          <div key={item.k} className={`settings-nav-item${settingsPage===item.k?' active':''}`} onClick={()=>setSettingsPage(item.k)}>
+            <span>{item.icon}</span>{item.label}
+          </div>
+        ))}
+      </div>
+      <div style={{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}}>
+        {settingsPage==='general'&&(
+          <div className="settings-content">
+            <div className="settings-title">General</div>
+            <div className="form-row"><div className="form-label">Organisation Name</div><input className="form-input" defaultValue="City of Riverside Council" style={{maxWidth:360}}/></div>
+            <div className="form-row"><div className="form-label">Tenant ID</div><input className="form-input" defaultValue="riverside-council-au" style={{maxWidth:360}} readOnly/></div>
+            <button className="btn primary">Save</button>
+          </div>
+        )}
+        {settingsPage==='users'&&<ManageUsers/>}
+        {settingsPage==='locations'&&<ManageLocations/>}
+        {settingsPage==='templates'&&<ClassificationTemplates role={role} model={model} setModel={setModel} initialSelected={templateTarget} onInitialSelectedConsumed={onTemplateTargetConsumed}/>}
+      </div>
+    </div>
+  );
+}
+
+// ── LEFT NAV ──────────────────────────────────────────────────────────────
+function LeftNav({page,setPage,settingsPage,setSettingsPage}){
+  const [showSub,setShowSub]=useState(false);
+  const ref=useRef();
+  useEffect(()=>{
+    function h(e){if(ref.current&&!ref.current.contains(e.target))setShowSub(false);}
+    document.addEventListener('mousedown',h);return()=>document.removeEventListener('mousedown',h);
+  },[]);
+  return(
+    <div className="left-nav" ref={ref}>
+      {[
+        {k:'home',icon:'🏠',label:'Home'},
+        {k:'assets',icon:'📋',label:'Assets'},
+        {k:'work',icon:'🔧',label:'Work Orders'},
+        {k:'reports',icon:'📊',label:'Reports'},
+      ].map(item=>(
+        <div key={item.k} className={`nav-icon${page===item.k?' active':''}`} title={item.label}
+          onClick={()=>{setPage(item.k);setShowSub(false);}}>
+          {item.icon}
+        </div>
+      ))}
+      <div className="nav-spacer"/>
+      <div className={`nav-icon${page==='settings'?' active':''}`} title="Settings"
+        onClick={()=>{setShowSub(s=>!s);setPage('settings');}}>⚙️</div>
+      {showSub&&(
+        <div className="submenu">
+          <div style={{padding:'8px 14px 4px',fontSize:10,fontWeight:700,color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:.5}}>Settings</div>
+          {[
+            {k:'general',icon:'🏢',label:'General'},
+            {k:'users',icon:'👥',label:'Users & Roles'},
+            {k:'locations',icon:'📍',label:'Locations'},
+            {k:'templates',icon:'📐',label:'Classification Templates'},
+          ].map(item=>(
+            <div key={item.k} className={`submenu-item${settingsPage===item.k?' active':''}`}
+              onClick={()=>{setSettingsPage(item.k);setShowSub(false);}}>
+              <span>{item.icon}</span>{item.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── HOME ─────────────────────────────────────────────────────────────────
+function HomePage(){
+  return(
+    <div style={{padding:24,flex:1,overflow:'auto'}}>
+      <div style={{fontSize:18,fontWeight:700,marginBottom:3}}>Good morning, Olivia</div>
+      <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:20}}>City of Riverside Council · Asset portfolio overview</div>
+      <div className="kpi-grid">
+        {[
+          {label:'Maint. Cost YTD',value:'$1.24M',sub:'FY 2025–26'},
+          {label:'Avg Condition Score',value:'5.8',sub:'Across 142 assets'},
+          {label:'Assets Due Survey',value:'23',sub:'Next 90 days'},
+          {label:'Replacement Value',value:'$84.6M',sub:'Current portfolio'},
+        ].map(k=>(
+          <div key={k.label} className="kpi-card">
+            <div className="kpi-label">{k.label}</div>
+            <div className="kpi-value">{k.value}</div>
+            <div className="kpi-sub">{k.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        <div style={{background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:16}}>
+          <div className="section-title">Condition Summary by Type</div>
+          {[
+            {type:'Road Carriageway',avg:5.5,count:48},
+            {type:'Bridge',avg:5.6,count:12},
+            {type:'Building',avg:7.1,count:31},
+            {type:'Stormwater Pipe',avg:5.1,count:51},
+          ].map(r=>(
+            <div key={r.type} style={{marginBottom:12}}>
+              <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+                <span style={{fontSize:12,color:'var(--text-secondary)'}}>{r.type} <span style={{color:'var(--text-muted)',fontSize:11}}>({r.count})</span></span>
+                <span style={{fontWeight:700,fontSize:13,color:scoreColor(r.avg)}}>{r.avg.toFixed(1)} — {condLabel(r.avg)}</span>
+              </div>
+              <div style={{height:6,background:'var(--bg-elevated)',borderRadius:3,overflow:'hidden'}}>
+                <div style={{height:'100%',borderRadius:3,width:`${r.avg*10}%`,background:scoreColor(r.avg)}}/>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{background:'var(--bg-surface-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:16}}>
+          <div className="section-title">Recent Activity</div>
+          {ACTIVITY.map((a,i)=>(
+            <div key={i} className="activity-item">
+              <div className="activity-dot"/>
+              <span className="activity-text">{a.text}</span>
+              <span className="activity-time">{a.time}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── APP ───────────────────────────────────────────────────────────────────
+function App(){
+  const [page,setPage]=useState('assets');
+  const [settingsPage,setSettingsPage]=useState('templates');
+  const [selectedAsset,setSelectedAsset]=useState(null);
+  const [showForm,setShowForm]=useState(false);
+  const [typeFilter,setTypeFilter]=useState('');
+  const [subtypeFilter,setSubtypeFilter]=useState('');
+  const [toast,setToast]=useState(null);
+  const [role,setRole]=useState('tenant-admin');
+  const [model,setModel]=useState(2);
+  const [templateTarget,setTemplateTarget]=useState(null);
+
+  function handleSetModel(m){
+    setModel(m);
+    if(m!==3)setRole('tenant-admin');
+  }
+
+  function showToast(msg){setToast(msg);setTimeout(()=>setToast(null),2500);}
+
+  return(
+    <div className="app">
+      <div className="top-nav">
+        <div className="logo">Si</div>
+        <span className="brand">MMM</span>
+        <span className="sep">/</span>
+        <span className="tenant" style={{color:role!=='tenant-admin'?'var(--accent-purple)':'var(--text-secondary)'}}>
+          {role==='tenant-admin'?'City of Riverside Council':role==='platform-analyst'?'Brightly Platform — Analyst':'Brightly Platform — Editor'}
+        </span>
+        <div style={{flex:1}}/>
+        {['Home','Assets','Work','Reports'].map(p=>(
+          <span key={p} className={`nav-link${page===p.toLowerCase()?' active':''}`}
+            onClick={()=>{setPage(p.toLowerCase());if(p!=='Assets')setSelectedAsset(null);}}>
+            {p}
+          </span>
+        ))}
+        <div style={{width:1,height:18,background:'var(--border)',margin:'0 4px'}}/>
+        <button className="btn ghost" style={{fontSize:13,padding:'3px 6px'}}>🔔</button>
+        <div className="avatar" style={{background:role!=='tenant-admin'?'var(--accent-purple)':'#3b5cb8'}}>
+          {role==='tenant-admin'?'OT':role==='platform-analyst'?'PA':'PE'}
+        </div>
+      </div>
+
+      <div className="main-body">
+        <LeftNav page={page} setPage={p=>{setPage(p);if(p!=='assets')setSelectedAsset(null);}}
+          settingsPage={settingsPage} setSettingsPage={p=>{setSettingsPage(p);setPage('settings');}}/>
+        <div className="content">
+          {page==='home'&&<HomePage/>}
+          {page==='assets'&&(
+            <div style={{display:'flex',flex:1,overflow:'hidden'}}>
+              <AssetsTable
+                onSelect={setSelectedAsset} selectedId={selectedAsset?.id}
+                typeFilter={typeFilter} setTypeFilter={setTypeFilter}
+                subtypeFilter={subtypeFilter} setSubtypeFilter={setSubtypeFilter}
+                onNew={()=>setShowForm(true)}/>
+              {selectedAsset&&<SidePanel asset={selectedAsset} onClose={()=>setSelectedAsset(null)} onViewTemplate={type=>{setTemplateTarget(type);setSettingsPage('templates');setPage('settings');}} model={model}/>}
+            </div>
+          )}
+          {page==='work'&&<div className="empty-state"><div className="empty-icon">🔧</div><div>Work Orders — not in scope for this prototype</div></div>}
+          {page==='reports'&&<div className="empty-state"><div className="empty-icon">📊</div><div>Reports — not in scope for this prototype</div></div>}
+          {page==='settings'&&<SettingsPage settingsPage={settingsPage} setSettingsPage={setSettingsPage} role={role} model={model} setModel={handleSetModel} templateTarget={templateTarget} onTemplateTargetConsumed={()=>setTemplateTarget(null)}/>}
+        </div>
+      </div>
+
+      {showForm&&<AssetForm onClose={()=>{setShowForm(false);showToast('Asset saved.');}}/>}
+      {toast&&<div className="toast">✅ {toast}</div>}
+      <DemoPanel role={role} setRole={setRole} model={model} setModel={handleSetModel}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
